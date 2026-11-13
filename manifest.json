@@ -1,0 +1,16 @@
+{
+  "name": "Seguimiento de inglés · EME",
+  "short_name": "Inglés EME",
+  "description": "Seguimiento de inglés de la Escuela Militar de Enfermería: cadetes, calificaciones, ALC y ALCPT, remedial, estadística y kárdex. Funciona sin conexión; los datos se quedan en el dispositivo.",
+  "lang": "es-MX",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#EDF2F0",
+  "theme_color": "#0A2420",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icon.svg", "sizes": "any", "type": "image/svg+xml"}
+  ]
+}

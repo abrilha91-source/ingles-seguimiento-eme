@@ -1,0 +1,32 @@
+
+/* ---------- réplica: secciones nuevas ---------- */
+.subnav{margin:0 0 14px;display:inline-flex;flex-wrap:wrap}
+.remhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.esc{display:inline-block;min-width:34px;padding:2px 8px;border-radius:999px;font:700 13px/1.4 var(--mono);text-align:center;color:#fff;background:var(--c,#888)}
+.esc.nil{background:transparent;color:var(--muted)}
+td .esc{white-space:nowrap}
+.esc-leg{display:flex;flex-wrap:wrap;gap:10px 16px}.esc-leg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.escbar{display:flex;height:26px;border-radius:8px;overflow:hidden;background:rgba(255,255,255,.08);width:100%}
+.escbar i{display:flex;align-items:center;justify-content:center;color:#fff;font:700 12px var(--mono);font-style:normal;min-width:18px}
+.gm-h.esc-h{display:flex;align-items:center;padding:14px 18px}
+.tbl input[type=date],.tbl input:not([type]),.tbl input[type=text]{padding:6px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);font:inherit;font-size:14px}
+.tbl input[type=color]{width:44px;height:30px;border:0;background:none;padding:0}
+.esc-t input[type=number]{width:70px}
+.rx-tl{display:flex;flex-wrap:wrap;gap:4px}
+.estbars{display:grid;gap:6px;margin:8px 0 14px}.estbars .crow{display:grid;grid-template-columns:minmax(120px,240px) 1fr 90px;gap:10px;align-items:center}
+.estbars .track{height:12px;border-radius:6px;background:var(--surface-2);overflow:hidden}.estbars .fill{height:100%;background:var(--olive);border-radius:6px}
+.estbars b{font-family:var(--disp);font-size:18px;text-align:right}.estbars b small{display:block;font:500 11px var(--sans);color:var(--muted)}
+i.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
+#printArea{display:none}
+@media print{
+  body.printing>*:not(#printArea){display:none!important}
+  body.printing #printArea{display:block!important}
+  body.printing{background:#fff!important}
+  @page{size:letter landscape;margin:12mm}
+}
+#printArea .kx{border-collapse:collapse;width:100%;font-family:"Noto Sans",Arial,sans-serif;font-size:10pt;color:#000}
+#printArea .kx th,#printArea .kx td{border:1px solid #888;padding:3px 5px;text-align:left;vertical-align:middle}
+#printArea .kx tr:first-child th,#printArea .kx tr:nth-child(2) th{border:0;text-align:center}
+#printArea .kx tr.sp td{border:0;height:8px}
+.tbl td.wide{min-width:220px;white-space:normal}
+.nw{white-space:nowrap}

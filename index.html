@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A2420">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Seguimiento de inglés · EME</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="vendor/fonts.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="brand"><span class="mk">En</span><div><b>Seguimiento de inglés</b><span>Escuela Militar de Enfermería</span></div></div>
+    <span class="ekg" aria-hidden="true"><svg viewBox="0 0 400 28" preserveAspectRatio="none"><path d="M0 14H40l4-5 4 5h10l3 4 5-16 5 22 4-10h14l6-6 6 6h99l4-5 4 5h10l3 4 5-16 5 22 4-10h14l6-6 6 6H400"/></svg></span>
+    <nav class="tabs" role="tablist" aria-label="Secciones">
+      <button role="tab" data-v="pan" aria-selected="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg><span class="l">Panorama</span></button>
+      <button role="tab" data-v="cad" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.2 3-5 6-5s5.4 1.8 6 5"/><path d="M16 5.2a3 3 0 0 1 0 5.6M18 14.3c1.6.7 2.6 2.3 3 4.7"/></svg><span class="l">Cadetes</span></button>
+      <button role="tab" data-v="cal" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M9 11h6M9 15h4"/><path d="M14 4v4h5"/></svg><span class="l">Calificaciones</span></button>
+      <button role="tab" data-v="alc" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg><span class="l">ALC y ALCPT</span></button>
+      <button role="tab" data-v="rem" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/><path d="m9 15 2 2 4-4"/></svg><span class="l">Remedial</span><span class=cnt id=cntRem></span></button>
+      <button role="tab" data-v="eme" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l5-5 4 4 8-9"/><path d="M15 7h5v5"/></svg><span class="l">Seguimiento EME</span></button>
+      <button role="tab" data-v="est" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4v8l6 4"/></svg><span class="l">Estadística</span></button>
+      <button role="tab" data-v="imp" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5"/><path d="M5 14v5h14v-5"/></svg><span class="l">Importar</span></button>
+      <button role="tab" data-v="cfg" aria-selected="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h9M18 6h1M5 12h3M12 12h7M5 18h11M20 18h-1"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg><span class="l">Ajustes</span></button>
+    </nav>
+    <div class="railfoot"><div class="st" id="connSt"><i></i><span>Conectando…</span></div><span id="connSub">Mesa de Idioma Extranjero · réplica v1.0</span></div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <div class="greet"><p id="gDate"></p><strong id="gHi">Seguimiento de inglés</strong></div>
+      <div class="gsearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="gq" type="search" autocomplete="off" placeholder="Buscar cadete por nombre o matrícula" aria-label="Buscar cadete" aria-controls="gres"><kbd>/</kbd>
+        <div class="gres" id="gres" hidden></div></div>
+      <button class="thm" type="button" id="thm" aria-label="Cambiar entre tema claro y oscuro"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></button>
+    </header>
+    <p class="notice" id="notice" hidden></p>
+    <main id="view"><div class="empty"><strong>Cargando seguimiento…</strong>Un momento.</div></main>
+  </div>
+</div>
+<div class="tip" id="tip" role="tooltip"></div>
+<dialog id="dAsk" class="sm"><form method="dialog" class="dlg"><h2 id="askT">Confirmar</h2><p class="hint" id="askM" style="font-size:15px"></p>
+  <div class="acts"><button class="btn ghost" value="no" formnovalidate>Cancelar</button><button class="btn" value="ok" id="askOk">Confirmar</button></div></form></dialog>
+<dialog id="dFicha"><div class="dlg" id="fichaBody"></div></dialog>
+<dialog id="dCause" class="sm"><form method="dialog" class="dlg">
+  <h2>¿Por qué no asistió?</h2><p class="hint" id="cWho"></p>
+  <div class="causebtns" id="cBtns"></div>
+  <div class="acts"><button class="btn ghost" value="cancel" formnovalidate>Clasificar después</button></div>
+</form></dialog>
+<dialog id="dSat" class="sm"><form method="dialog" class="dlg">
+  <h2>Agregar sábado</h2>
+  <label>Fecha de la sesión<input id="sDate" type="date"></label>
+  <p class="hint" id="sHint"></p>
+  <div class="acts"><button class="btn ghost" value="cancel" formnovalidate>Cancelar</button><button class="btn" value="ok">Agregar sábado</button></div>
+</form></dialog>
+<dialog id="dAddRem" class="sm"><div class="dlg">
+  <h2>Inscribir al remedial</h2>
+  <label>Buscar cadete<input id="arQ" autocomplete="off" placeholder="Escribe al menos 3 letras del nombre o matrícula"></label>
+  <div class="results" id="arRes" hidden></div>
+  <div class="acts"><button class="btn ghost" id="arClose">Cerrar</button></div>
+</div></dialog>
+<dialog id="dDl" class="sm"><div class="dlg">
+  <h2 id="dlTitle">Descargar</h2><p class="hint" id="dlCount"></p>
+  <span class="hint">Secciones a incluir</span><div id="dlSecs" class="secs"></div>
+  <p class="hint">El archivo CSV abre en Excel.</p>
+  <div class="acts"><button class="btn ghost" id="dlCancel">Cancelar</button><button class="btn" id="dlGo">Descargar CSV</button></div>
+</div></dialog>
+<dialog id="dLista" class="lista"><div id="lsBody" tabindex="-1"></div></dialog>
+<dialog id="dRem"><div class="dlg" id="remBody"></div></dialog>
+<dialog id="dEme"><div class="dlg" id="emeBody"></div></dialog>
+<div id="printArea" aria-hidden="true"></div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="shim.js"></script>
+<script src="app.js"></script>
+<script src="ocr.js"></script>
+<script src="transcribe.js"></script>
+<script src="readers.js"></script>
+<script src="ext.js"></script>
+<script src="estadisticas.js"></script>
+<script src="boot.js"></script>
+</body>
+</html>

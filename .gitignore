@@ -1,0 +1,4 @@
+original.html
+PRIVADO/
+*.private.json
+__pycache__/

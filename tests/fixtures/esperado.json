@@ -1,0 +1,168 @@
+{
+ "rows": [
+  {
+   "Año": "2/o. año",
+   "Grupo": "2o-G1",
+   "Nombre": "Zafiro Quintero Ana Lucia",
+   "Matrícula": "SINT-001",
+   "Docente": "Docente Sintetico 21",
+   "Generación": "2028-2032"
+  },
+  {
+   "Año": "2/o. año",
+   "Grupo": "2o-G1",
+   "Nombre": "Turquesa Valdivia Bruno",
+   "Matrícula": "SINT-002",
+   "Docente": "Docente Sintetico 21",
+   "Generación": "2028-2032"
+  },
+  {
+   "Año": "2/o. año",
+   "Grupo": "2o-G1",
+   "Nombre": "Ambar Solis Carla",
+   "Matrícula": "SINT-003",
+   "Docente": "Docente Sintetico 21",
+   "Generación": "2028-2032"
+  },
+  {
+   "Año": "2/o. año",
+   "Grupo": "2o-G2",
+   "Nombre": "Onix Paredes Dario",
+   "Matrícula": "SINT-004",
+   "Docente": "Docente Sintetico 22",
+   "Generación": "2028-2032"
+  },
+  {
+   "Año": "2/o. año",
+   "Grupo": "2o-G2",
+   "Nombre": "Jade Montiel Elena",
+   "Matrícula": "SINT-005",
+   "Docente": "Docente Sintetico 22",
+   "Generación": "2028-2032"
+  },
+  {
+   "Año": "2/o. año",
+   "Grupo": "2o-G2",
+   "Nombre": "Rubi Carranza Fabian",
+   "Matrícula": "SINT-006",
+   "Docente": "Docente Sintetico 22",
+   "Generación": "2028-2032"
+  },
+  {
+   "Año": "3/o. año",
+   "Grupo": "3o-G1",
+   "Nombre": "Topacio Ibarra Gina",
+   "Matrícula": "SINT-007",
+   "Docente": "Docente Sintetico 31",
+   "Generación": "2027-2031"
+  },
+  {
+   "Año": "3/o. año",
+   "Grupo": "3o-G1",
+   "Nombre": "Cuarzo Lemus Hugo",
+   "Matrícula": "SINT-008",
+   "Docente": "Docente Sintetico 31",
+   "Generación": "2027-2031"
+  },
+  {
+   "Año": "3/o. año",
+   "Grupo": "3o-G1",
+   "Nombre": "Perla Navarrete Irene",
+   "Matrícula": "SINT-009",
+   "Docente": "Docente Sintetico 31",
+   "Generación": "2027-2031"
+  },
+  {
+   "Año": "3/o. año",
+   "Grupo": "3o-G2",
+   "Nombre": "Granate Oropeza Julio",
+   "Matrícula": "SINT-010",
+   "Docente": "Docente Sintetico 32",
+   "Generación": "2027-2031"
+  },
+  {
+   "Año": "3/o. año",
+   "Grupo": "3o-G2",
+   "Nombre": "Coral Benitez Karen",
+   "Matrícula": "SINT-011",
+   "Docente": "Docente Sintetico 32",
+   "Generación": "2027-2031"
+  },
+  {
+   "Año": "3/o. año",
+   "Grupo": "3o-G2",
+   "Nombre": "Opalo Zamudio Leon",
+   "Matrícula": "SINT-012",
+   "Docente": "Docente Sintetico 32",
+   "Generación": "2027-2031"
+  },
+  {
+   "Año": "4/o. año",
+   "Grupo": "4o-G1",
+   "Nombre": "Agata Villegas Mara",
+   "Matrícula": "SINT-013",
+   "Docente": "Docente Sintetico 41",
+   "Generación": "2026-2030"
+  },
+  {
+   "Año": "4/o. año",
+   "Grupo": "4o-G1",
+   "Nombre": "Berilo Ochoa Nestor",
+   "Matrícula": "SINT-014",
+   "Docente": "Docente Sintetico 41",
+   "Generación": "2026-2030"
+  },
+  {
+   "Año": "4/o. año",
+   "Grupo": "4o-G1",
+   "Nombre": "Jaspe Urrutia Olga",
+   "Matrícula": "SINT-015",
+   "Docente": "Docente Sintetico 41",
+   "Generación": "2026-2030"
+  },
+  {
+   "Año": "4/o. año",
+   "Grupo": "4o-G2",
+   "Nombre": "Cobalto Rendon Pablo",
+   "Matrícula": "SINT-016",
+   "Docente": "Docente Sintetico 42",
+   "Generación": "2026-2030"
+  },
+  {
+   "Año": "4/o. año",
+   "Grupo": "4o-G2",
+   "Nombre": "Mica Salazar Queta",
+   "Matrícula": "SINT-017",
+   "Docente": "Docente Sintetico 42",
+   "Generación": "2026-2030"
+  },
+  {
+   "Año": "4/o. año",
+   "Grupo": "4o-G2",
+   "Nombre": "Basalto Tovar Rene",
+   "Matrícula": "SINT-018",
+   "Docente": "Docente Sintetico 42",
+   "Generación": "2026-2030"
+  }
+ ],
+ "scores": {
+  "Zafiro Quintero Ana Lucia": 20,
+  "Turquesa Valdivia Bruno": 27,
+  "Ambar Solis Carla": 34,
+  "Onix Paredes Dario": 41,
+  "Jade Montiel Elena": 48,
+  "Rubi Carranza Fabian": 55,
+  "Topacio Ibarra Gina": 62,
+  "Cuarzo Lemus Hugo": 69,
+  "Perla Navarrete Irene": 76,
+  "Granate Oropeza Julio": 83,
+  "Coral Benitez Karen": 20,
+  "Opalo Zamudio Leon": 27,
+  "Agata Villegas Mara": 34,
+  "Berilo Ochoa Nestor": 41,
+  "Jaspe Urrutia Olga": 48,
+  "Cobalto Rendon Pablo": 55,
+  "Mica Salazar Queta": 62,
+  "Basalto Tovar Rene": 69
+ }
+}

@@ -1,0 +1,317 @@
+{
+ "fecha": "2026-11-13 03:13",
+ "correctas": 62,
+ "total": 62,
+ "pruebas": [
+  {
+   "prueba": "Todas las pestañas abren con la app vacía",
+   "ok": true,
+   "detalle": "['pan', 'cad', 'cal', 'alc', 'rem', 'eme', 'est', 'imp', 'cfg']"
+  },
+  {
+   "prueba": "Importar lista de cadetes (Excel)",
+   "ok": true,
+   "detalle": "18 cadetes nuevos · 0 actualizados"
+  },
+  {
+   "prueba": "Pestaña pan con datos",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Pestaña cad con datos",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Pestaña cal con datos",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Pestaña alc con datos",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Pestaña rem con datos",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Pestaña eme con datos",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Pestaña est con datos",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Pestaña imp con datos",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Pestaña cfg con datos",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "ALCPT examen nuevo: la forma no se puede anotar antes del puntaje",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "ALCPT: examen nuevo y puntaje guardado",
+   "ok": true,
+   "detalle": "ALCPT Nov 2026"
+  },
+  {
+   "prueba": "ALCPT: color de escala (0–29 remedial)",
+   "ok": true,
+   "detalle": "Agata Villegas Mara\n4/o. año · Grupo 1\n\t\tRemedial obligatorio\t\t\t\nDiagnóstico\nPeriodo\nFinal\nSeguimiento"
+  },
+  {
+   "prueba": "ALCPT: la forma se habilita solo después del puntaje",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "ALC: libros del plan C.2 para 4/o. año (14-17)",
+   "ok": true,
+   "detalle": "['Libro 14', 'Libro 15', 'Libro 16 (otro semestre)', 'Libro 17 (otro semestre)']"
+  },
+  {
+   "prueba": "ALC: puntajes guardados y promedio",
+   "ok": true,
+   "detalle": "PROMEDIO\n72.3\nCAPTURADOS\n3/6\nMÍNIMO · MÁXIMO\n55 · 90\n1\n1\n1"
+  },
+  {
+   "prueba": "ALC/ALCPT: tabla de promedios",
+   "ok": true,
+   "detalle": "Promedios sin exentos. ALCPT en escala 0–100; ALC es el promedio de todos los exámenes de libro capturados.\n\nAÑO\tGRUPO\tDOCENTE\tCADETES\tDIAG. 2026\tALCPT NOV 2026\tALC\n2/o. año\tGrupo 1\tDocente Sintetico "
+  },
+  {
+   "prueba": "Plan de libros visible",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Remedial: candidatos por escala",
+   "ok": true,
+   "detalle": "1"
+  },
+  {
+   "prueba": "Remedial: inscrito aparece en expedientes",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Remedial: re-evaluación y avance anotados",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Remedial: historial con estatus Aprobado",
+   "ok": true,
+   "detalle": "Todos los remediales registrados, en curso y cerrados, incluidos egresados.\n\nCADETE\tALTA\tBAJA\tMOTIVO\tINGRESO\tÚLTIMA RE-EVALUACIÓN\tESTATUS\tCIERRE\nAgata Villegas Mara\n4/o. año · Grupo 1\n\t2026-11-13\t2026"
+  },
+  {
+   "prueba": "Remedial original: sábado agregado y pase de lista",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "EME: observación anotada",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "EME: gráfica de progreso",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Kárdex .xlsx: Noto Sans 10 y celdas combinadas",
+   "ok": true,
+   "detalle": "(45, 0, 17)"
+  },
+  {
+   "prueba": "Kárdex no muestra la forma del examen",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Kárdex imprimible (tabla de impresión)",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Kárdex de lo filtrado (una hoja por cadete)",
+   "ok": true,
+   "detalle": "(18, 0)"
+  },
+  {
+   "prueba": "Estadística: pedido en español interpretado",
+   "ok": true,
+   "detalle": "ESTADÍSTICA\n\nPide un dato general o específico. Escribe tu pedido o usa los filtros; el resultado se descarga en Excel.\n\nCalcular\n\nEntendí: ALCPT: último examen · 4/o. año · por grupo\n\nDato\nALCPT: último examen\nALCPT: un examen\nDiagnóstico ALCPT 2026\nALCPT: avance (último − primero)\nALC: promedio de"
+  },
+  {
+   "prueba": "Estadística .xlsx: Noto Sans 10, combinadas",
+   "ok": true,
+   "detalle": "(78, 0, 12, ['Resumen', 'Detalle'])"
+  },
+  {
+   "prueba": "Estadística: «inasistencias del remedial por causa»",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Estadística: «estatus del remedial»",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Estadística: «promedio ALC libro 14»",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Estadística: «tendencia alcpt por examen»",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Importar xlsx: filas asociadas a cadetes",
+   "ok": true,
+   "detalle": "6/6 · 0s"
+  },
+  {
+   "prueba": "Importar: aplicar cambios",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Importar csv: filas asociadas a cadetes",
+   "ok": true,
+   "detalle": "6/6 · 0s"
+  },
+  {
+   "prueba": "Importar docx: filas asociadas a cadetes",
+   "ok": true,
+   "detalle": "6/6 · 0s"
+  },
+  {
+   "prueba": "Importar pptx: filas asociadas a cadetes",
+   "ok": true,
+   "detalle": "6/6 · 0s"
+  },
+  {
+   "prueba": "Importar pdf_texto: filas asociadas a cadetes",
+   "ok": true,
+   "detalle": "6/6 · 1s"
+  },
+  {
+   "prueba": "Importar pdf_escaneado: filas asociadas a cadetes",
+   "ok": true,
+   "detalle": "6/6 · 1s"
+  },
+  {
+   "prueba": "Importar png: filas asociadas a cadetes",
+   "ok": true,
+   "detalle": "6/6 · 1s"
+  },
+  {
+   "prueba": "Importar jpg: filas asociadas a cadetes",
+   "ok": true,
+   "detalle": "6/6 · 1s"
+  },
+  {
+   "prueba": "Importar wav: audio leído o explicado",
+   "ok": true,
+   "detalle": "0 filas · 7s · Leer archivo\nQuitar archivos\n\nNo se reconoció ningún renglón con nombre de cadete. Revisa que la lista esté completa y legible.\n\nIMPORTACIONES ANTERIORES\nFECHA\t"
+  },
+  {
+   "prueba": "Importar mp3: audio leído o explicado",
+   "ok": true,
+   "detalle": "0 filas · 2s · Leer archivo\nQuitar archivos\n\nNo se reconoció ningún renglón con nombre de cadete. Revisa que la lista esté completa y legible.\n\nIMPORTACIONES ANTERIORES\nFECHA\t"
+  },
+  {
+   "prueba": "Importar: tipo ALC con libro y examen",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Importar ALC: filas asociadas",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Ficha: adjunta PowerPoint y audio como evidencia",
+   "ok": true,
+   "detalle": "PowerPoint\nalcpt_sintetico.pptx\n2026-11-13\nQuitar\nAudio\nalcpt_sintetico.mp3\n2026-11-13\nQuitar\nNota (opcional)\nAdjuntar archivos\n\nJPG, PNG, PDF, MP3 y WAV hasta 20 MB; Word, Excel y PowerPoint hasta 8 "
+  },
+  {
+   "prueba": "Ficha: sección ALC por libro",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Concentrado .xlsx: Noto Sans 10, combinadas",
+   "ok": true,
+   "detalle": "(106, 0, 17)"
+  },
+  {
+   "prueba": "Ajustes: escala guardada",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Persistencia tras recargar",
+   "ok": true,
+   "detalle": "18"
+  },
+  {
+   "prueba": "Borrar datos del dispositivo",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Respaldo JSON: ida y vuelta sin pérdidas",
+   "ok": true,
+   "detalle": "18"
+  },
+  {
+   "prueba": "Cierre de ciclo: 4/o. egresa y los demás suben de año",
+   "ok": true,
+   "detalle": "{'eg': 6, 'a3': 6, 'tray': 1, 'ciclo': '2027-2028'}"
+  },
+  {
+   "prueba": "EME: egresados visibles con su trayectoria",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Sin errores de consola",
+   "ok": true,
+   "detalle": "[]"
+  },
+  {
+   "prueba": "Funciona sin conexión (PWA)",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Celular: todas las pestañas sin desbordar la pantalla",
+   "ok": true,
+   "detalle": "[('pan', 390), ('cad', 390), ('cal', 390), ('alc', 390), ('rem', 390), ('eme', 390), ('est', 390), ('imp', 390), ('cfg', 390)]"
+  },
+  {
+   "prueba": "Celular: sin errores",
+   "ok": true,
+   "detalle": "[]"
+  }
+ ]
+}
