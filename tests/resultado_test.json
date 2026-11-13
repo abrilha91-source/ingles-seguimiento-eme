@@ -1,5 +1,5 @@
 {
- "fecha": "2026-11-13 05:59",
+ "fecha": "2026-11-13 06:29",
  "correctas": 62,
  "total": 62,
  "pruebas": [
@@ -71,7 +71,7 @@
   {
    "prueba": "ALCPT: color de escala (0–29 remedial)",
    "ok": true,
-   "detalle": "Agata Villegas Mara\n4/o. año · Grupo 1\n\t\tRemedial obligatorio\tNo aprobado\nmín. 45 · 4/o. año\n\t\t\t\nDiagnóstico\nPeriodo\nFinal\nSeguimiento"
+   "detalle": "Agata Villegas Mara\n4/o. año · Grupo 1\n\t\tRemedial obligatorio\tNo aprobado\nmín. 55 · 4/o. año, 1/er. sem.\n\t\t\t\nDiagnóstico\nPeriodo\nFinal\nSeguimiento"
   },
   {
    "prueba": "ALCPT: la forma se habilita solo después del puntaje",
@@ -231,12 +231,12 @@
   {
    "prueba": "Importar wav: audio leído o explicado",
    "ok": true,
-   "detalle": "0 filas · 8s · Leer archivo\nQuitar archivos\n\nNo se reconoció ningún renglón con nombre de cadete. Revisa que la lista esté completa y legible.\n\nIMPORTACIONES ANTERIORES\nFECHA\t"
+   "detalle": "0 filas · 5s · Leer archivo\nQuitar archivos\n\nNo se reconoció ningún renglón con nombre de cadete. Revisa que la lista esté completa y legible.\n\nIMPORTACIONES ANTERIORES\nFECHA\t"
   },
   {
    "prueba": "Importar mp3: audio leído o explicado",
    "ok": true,
-   "detalle": "0 filas · 3s · Leer archivo\nQuitar archivos\n\nNo se reconoció ningún renglón con nombre de cadete. Revisa que la lista esté completa y legible.\n\nIMPORTACIONES ANTERIORES\nFECHA\t"
+   "detalle": "0 filas · 2s · Leer archivo\nQuitar archivos\n\nNo se reconoció ningún renglón con nombre de cadete. Revisa que la lista esté completa y legible.\n\nIMPORTACIONES ANTERIORES\nFECHA\t"
   },
   {
    "prueba": "Importar: tipo ALC con libro y examen",

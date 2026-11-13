@@ -19,14 +19,21 @@ Funciona en el navegador, sin servidor y sin conexión una vez abierta. **Se pub
 
 Los documentos de Excel se generan en Noto Sans 10 y combinan las celdas que comparten información.
 
-## Aprobación ALCPT por año (v1.1)
-- **Mínimo aprobatorio oficial:** 3/er. año (Inglés III) 31 puntos y 4/o. año (Inglés V) 45 puntos, según el Mensaje C.E.I. SAC./P.C.-100 del 22 sep. 2026 (cumple el SFPM/SAC.-987 del 17 sep. 2026). Conversión: 3/er. 36+=10, 35=9, 34=8, 33=7, 32=6.5, 31=6; 4/o. 50=10, 49=9, 48=8, 47=7, 46=6.5, 45=6.
-- **1/er. y 2/o. año:** sin mínimo oficial («Sin mínimo oficial»). Opción en Ajustes para usar 26 puntos del programa «Idioma Extranjero II», marcado «por confirmar».
-- El puntaje de referencia al concluir cada semestre (tabla C.2, 30 sep. 2026) se muestra como referencia y no decide la aprobación.
-- Cada examen se califica con el mínimo del año que cursaba el cadete al presentarlo (se puede cambiar al año actual en Ajustes).
-- Aprobado / No aprobado en Cadetes (insignias), ficha, ALC y ALCPT, Seguimiento EME y kárdex, Panorama (tabla por año), Estadística (conteos y % por año y grupo; hoja «Aprobación ALCPT» en el Excel) y concentrado.
-- Monitor: calificación diagnóstica mayor a 7.0. Remedial: candidato quien queda por debajo del mínimo de su año; «Puede salir del remedial» al alcanzar el mínimo en un examen posterior al alta.
-- Calificación final = parciales 60 % + A.L.C.P.T. final convertido 40 % (configurable); A.L.C.P.T. final por debajo del mínimo = extraordinario.
+## Aprobación ALCPT por año y semestre (v1.1)
+- **Mínimo aprobatorio (por omisión): contrapropuesta de la EME (inciso III.A)**, por decisión de la Cap. abril (13 nov. 2026):
+
+  | Año | Libros | 1/er. semestre | 2/o. semestre |
+  |---|---|---|---|
+  | 1/er. | 4-5 | sin mínimo | 29 (la tabla dice 29-30) |
+  | 2/o. | 6-9 | 30 | 41 |
+  | 3/er. | 10-13 | 45 | 53 |
+  | 4/o. | 14-17 | 55 | 61 |
+
+- El semestre sale de la fecha del examen (2/o. semestre de febrero a julio; el resto es 1/er. semestre; configurable) y el año es el que cursaba el cadete al presentarlo (opción: año actual). El diagnóstico de septiembre es del 1/er. semestre.
+- **Alternativa en Ajustes: «Mínimo oficial SAC./P.C.-100»** (Mensaje C.E.I. del 22 sep. 2026): 3/er. año 31 y 4/o. año 45 puntos; 1/er. y 2/o. sin mínimo (opción 26 del programa «Idioma Extranjero II», por confirmar).
+- Las tablas de conversión de puntos a calificación son las oficiales (3/er.: 36+=10 … 31=6; 4/o.: 50=10 … 45=6) y no se cambiaron. Con la contrapropuesta, un cadete puede tener calificación de tabla de 6.0 o más y quedar «No aprobado».
+- Aprobado / No aprobado en Cadetes (insignias), ficha, ALC y ALCPT, Seguimiento EME y kárdex, Panorama, Estadística (hoja «Aprobación ALCPT») y concentrado. Entrada al remedial (candidatos) y salida («Puede salir del remedial») usan el mismo mínimo.
+- Monitor: calificación de tabla diagnóstica mayor a 7.0. Calificación final = parciales 60 % + A.L.C.P.T. final convertido 40 % (configurable); A.L.C.P.T. final por debajo del mínimo = extraordinario.
 
 ## Cargar datos
 1. Ajustes → **Cargar respaldo (.json)**, o
