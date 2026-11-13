@@ -1,5 +1,5 @@
 {
- "fecha": "2026-11-13 06:29",
+ "fecha": "2026-11-13 08:24",
  "correctas": 62,
  "total": 62,
  "pruebas": [
@@ -71,7 +71,7 @@
   {
    "prueba": "ALCPT: color de escala (0–29 remedial)",
    "ok": true,
-   "detalle": "Agata Villegas Mara\n4/o. año · Grupo 1\n\t\tRemedial obligatorio\tNo aprobado\nmín. 55 · 4/o. año, 1/er. sem.\n\t\t\t\nDiagnóstico\nPeriodo\nFinal\nSeguimiento"
+   "detalle": "Agata Villegas Mara\n4/o. año · Grupo 1\n\t\tRemedial obligatorio\tNo aprobado\nmín. 55 · 4/o. año\n\t\t\t\nDiagnóstico\nPeriodo\nFinal\nSeguimiento"
   },
   {
    "prueba": "ALCPT: la forma se habilita solo después del puntaje",
