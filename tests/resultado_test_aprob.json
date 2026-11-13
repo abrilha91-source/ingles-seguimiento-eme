@@ -1,0 +1,157 @@
+{
+ "fecha": "2026-11-13 06:01",
+ "correctas": 30,
+ "total": 30,
+ "pruebas": [
+  {
+   "prueba": "Carga del respaldo sintético",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Diagnóstico: 4/o. 44 no aprobado, 48 aprobado (mín. 45)",
+   "ok": true,
+   "detalle": "{'d4a': 'na', 'd4b': 'ap', 'd3a': 'na', 'd3b': 'ap', 'j4a': {'st': 'ap', 'a': '3', 'min': 31, 'oficial': True, 'sinFecha': False, 'cal': 9, 'v': 35}, 'f4a': 'sin', 'j3a': 'sin', 'l2a': 'sin', 'mon4b': True, 'mon3b': False, 'sal4c': True, 'sal4a': False, 'cf3c': {'st': 'ap', 'v': 7.85, 'p': 7.75, 'f'"
+  },
+  {
+   "prueba": "Diagnóstico: 3/er. 30 no aprobado, 33 aprobado (mín. 31)",
+   "ok": true,
+   "detalle": "{'d4a': 'na', 'd4b': 'ap', 'd3a': 'na', 'd3b': 'ap', 'j4a': {'st': 'ap', 'a': '3', 'min': 31, 'oficial': True, 'sinFecha': False, 'cal': 9, 'v': 35}, 'f4a': 'sin', 'j3a': 'sin', 'l2a': 'sin', 'mon4b': True, 'mon3b': False, 'sal4c': True, 'sal4a': False, 'cf3c': {'st': 'ap', 'v': 7.85, 'p': 7.75, 'f'"
+  },
+  {
+   "prueba": "Examen de jul 2026 de un 4/o. se califica con el mínimo de 3/er. (31)",
+   "ok": true,
+   "detalle": "{'st': 'ap', 'a': '3', 'min': 31, 'oficial': True, 'sinFecha': False, 'cal': 9, 'v': 35}"
+  },
+  {
+   "prueba": "Exámenes de 1/er. y 2/o. año: sin mínimo oficial",
+   "ok": true,
+   "detalle": "{'d4a': 'na', 'd4b': 'ap', 'd3a': 'na', 'd3b': 'ap', 'j4a': {'st': 'ap', 'a': '3', 'min': 31, 'oficial': True, 'sinFecha': False, 'cal': 9, 'v': 35}, 'f4a': 'sin', 'j3a': 'sin', 'l2a': 'sin', 'mon4b': True, 'mon3b': False, 'sal4c': True, 'sal4a': False, 'cf3c': {'st': 'ap', 'v': 7.85, 'p': 7.75, 'f'"
+  },
+  {
+   "prueba": "Monitor: calificación diagnóstica mayor a 7.0",
+   "ok": true,
+   "detalle": "{'d4a': 'na', 'd4b': 'ap', 'd3a': 'na', 'd3b': 'ap', 'j4a': {'st': 'ap', 'a': '3', 'min': 31, 'oficial': True, 'sinFecha': False, 'cal': 9, 'v': 35}, 'f4a': 'sin', 'j3a': 'sin', 'l2a': 'sin', 'mon4b': True, 'mon3b': False, 'sal4c': True, 'sal4a': False, 'cf3c': {'st': 'ap', 'v': 7.85, 'p': 7.75, 'f'"
+  },
+  {
+   "prueba": "Remedial: puede salir quien alcanza el mínimo después del alta",
+   "ok": true,
+   "detalle": "{'d4a': 'na', 'd4b': 'ap', 'd3a': 'na', 'd3b': 'ap', 'j4a': {'st': 'ap', 'a': '3', 'min': 31, 'oficial': True, 'sinFecha': False, 'cal': 9, 'v': 35}, 'f4a': 'sin', 'j3a': 'sin', 'l2a': 'sin', 'mon4b': True, 'mon3b': False, 'sal4c': True, 'sal4a': False, 'cf3c': {'st': 'ap', 'v': 7.85, 'p': 7.75, 'f'"
+  },
+  {
+   "prueba": "Calificación final 60/40 con ALCPT final convertido",
+   "ok": true,
+   "detalle": "{'st': 'ap', 'v': 7.85, 'p': 7.75, 'f': {'l': 'Ene 2027', 'v': 34, 'm': {'tipo': 'final', 'fecha': '', 'forma': ''}}, 'r': {'st': 'ap', 'a': '3', 'min': 31, 'oficial': True, 'sinFecha': False, 'cal': 8, 'v': 34}}"
+  },
+  {
+   "prueba": "ALCPT final por debajo del mínimo: extraordinario",
+   "ok": true,
+   "detalle": "extra"
+  },
+  {
+   "prueba": "Tablas de conversión oficiales",
+   "ok": true,
+   "detalle": "{'d4a': 'na', 'd4b': 'ap', 'd3a': 'na', 'd3b': 'ap', 'j4a': {'st': 'ap', 'a': '3', 'min': 31, 'oficial': True, 'sinFecha': False, 'cal': 9, 'v': 35}, 'f4a': 'sin', 'j3a': 'sin', 'l2a': 'sin', 'mon4b': True, 'mon3b': False, 'sal4c': True, 'sal4a': False, 'cf3c': {'st': 'ap', 'v': 7.85, 'p': 7.75, 'f'"
+  },
+  {
+   "prueba": "Ajustes: mínimos por año 1/er. y 2/o. vacíos, 3/er. 31, 4/o. 45",
+   "ok": true,
+   "detalle": "['', '', '31', '45']"
+  },
+  {
+   "prueba": "Cadetes: insignias de diagnóstico y ALCPT",
+   "ok": true,
+   "detalle": "cadetes\ntodos los años\n2/o. año\n3/er. año\n4/o. año\ntodos los grupos\n1\n2\ncualquier estado\naprobado\nreprobado\nsin calificación\nexento\nreprobado sin remedial\npuede salir del remedial\nen riesgo por faltas"
+  },
+  {
+   "prueba": "ALC y ALCPT: resultado del diagnóstico de 4/o. (1 aprob., 2 no aprob.)",
+   "ok": true,
+   "detalle": "2/o. año\n3/er. año\n4/o. año\nTodos los grupos\nGrupo 1\nGrupo 2\nDiagnóstico 21 sep. 2026\nALCPT Feb 2025\nALCPT Jul 2026\nALCPT Nov 2026\nALCPT Ene 2027\n+ Registrar examen nuevo…\nPROMEDIO\n44\nCAPTURADOS\n3/3\nMÍNIMO · MÁXIMO\n40 · 48\nAPROBADOS · NO APROBADOS\n1 · 2 (33.3% aprob.)\n3\n\n0–29: Remedial obligatorio\n3"
+  },
+  {
+   "prueba": "Promedios: columnas de aprobados / no aprobados",
+   "ok": true,
+   "detalle": "Promedios sin exentos. ALCPT en escala 0–100; ALC es el promedio de todos los exámenes de libro capturados.\n\nAÑO\tGRUPO\tDOCENTE\tCADETES\tDIAG. 2026\tALCPT FEB 2025\tALCPT JUL 2026\tALCPT NOV 2026\tALCPT ENE"
+  },
+  {
+   "prueba": "Panorama: aprobación por año (4/o. diag 1/2, último ALCPT 2/1 con el mínimo del año del examen)",
+   "ok": true,
+   "detalle": "['4/o. año', '3', '45', '1', '2', '—', '33.3%', '2', '1', '—', '66.7%', '1', '1']"
+  },
+  {
+   "prueba": "Panorama: 3/er. diag 2 aprob. / 2 no aprob.; último ALCPT 1/1 y 2 sin mínimo",
+   "ok": true,
+   "detalle": "['3/er. año', '4', '31', '2', '2', '—', '50%', '1', '1', '2', '50%', '0', '0']"
+  },
+  {
+   "prueba": "Estadística: pedido en español de aprobados del diagnóstico",
+   "ok": true,
+   "detalle": "eba Tres Gama\t3/er. año · Grupo 2\tDocente Ficticio\t31\tAprobado\nmín. 31 · 3/er. año · calif. 6\n\nPrueba Cuatro Alfa\t4/o. año · Grupo 1\tDocente Ficticio\t44\tNo aprobado\nmín. 45 · 4/o. año\n\nPrueba Cuatro Beta\t4/o. año · Grupo 1\tDocente Ficticio\t48\tAprobado\nmín. 45 · 4/o. año · calif. 8\n\nPrueba Cuatro Gam"
+  },
+  {
+   "prueba": "Estadística por año: 4/o. 1 aprob., 2 no aprob., 33.3 %",
+   "ok": true,
+   "detalle": "['4/o. año', '3', '3', '44.0', '44.0', '40', '48', '1', '2', '0', '33.3%', '0', '3', '0', '0']"
+  },
+  {
+   "prueba": "Excel de estadística: hoja Aprobación ALCPT, Noto Sans 10, celdas combinadas",
+   "ok": true,
+   "detalle": "(['Resumen', 'Detalle', 'Aprobación ALCPT'], 241, 0)"
+  },
+  {
+   "prueba": "Excel: total 4/o. diag 1/2/0 y 33.3 %",
+   "ok": true,
+   "detalle": "[None, 'Total del año', 3, None, 1, 2, 0, 33.3, 2, 1, 0, 66.7]"
+  },
+  {
+   "prueba": "Seguimiento EME: resultado del último ALCPT",
+   "ok": true,
+   "detalle": "SEGUIMIENTO EME\n\nExpediente de inglés de cada cadete durante toda su estancia, de 1/er. a 4/o. año, ligado a su matrícula: grupos y docentes por ciclo, ALCPT, ALC, remediales, calificaciones y observa"
+  },
+  {
+   "prueba": "Kárdex en pantalla: resultado por examen",
+   "ok": true,
+   "detalle": "PC\nPRUEBA CUATRO ALFA\n\nGeneración — · 4/o. año · Grupo 1\n\n×\nPROGRESO\nPUNTAJES DURANTE SU ESTANCIA\nALCPT\nALC y diagnóstico\n0\n50\n100\n20\nALCPT Feb 2025\n35\nALCPT Jul 2026\n44\nDiagnóstico sep 2026\nTRAYECTORIA POR CICLO\nCICLO\tSEMESTRE\tAÑO\tGRUPO\tDOCENTE\tALCPT\tALC\tPARCIALES\tREMEDIAL\n2026-2027\t1/er. semestre\t"
+  },
+  {
+   "prueba": "Kárdex .xlsx: columna Resultado con mínimo del año y Noto Sans 10",
+   "ok": true,
+   "detalle": "(['Ciclo', 'Semestre', 'Año', 'Grupo', 'Docente', 'Examen', 'Puntaje', 'Escala', 'Resultado', 'Promedio de parciales', 'Remedial'], ['2026-2027', '1/er. semestre', '4/o. año', '1', 'Docente Ficticio', 'Diagnóstico sep 2026', 44, 'Riesgo: candidato a remedial', 'No aprobado (mín. 45)', None, '2026-09"
+  },
+  {
+   "prueba": "Concentrado: resultados, monitor y calificación final",
+   "ok": true,
+   "detalle": "['Estatus remedial', 'Faltas sabatinas', 'Mínimo ALCPT del año', 'Resultado diagnóstico', 'Último ALCPT', 'Resultado último ALCPT', 'Monitor', 'Calificación final']"
+  },
+  {
+   "prueba": "Ajustes: cambiar el mínimo de 4/o. a 50 cambia el resultado",
+   "ok": true,
+   "detalle": "na"
+  },
+  {
+   "prueba": "Opción mínimo 26 del programa para 1/er. y 2/o. (por confirmar)",
+   "ok": true,
+   "detalle": "['ap', 'Aprobado (mín. por confirmar)']"
+  },
+  {
+   "prueba": "Remedial: candidato por debajo del mínimo de su año",
+   "ok": true,
+   "detalle": "REMEDIAL\n3 en curso · 0 con remedial aprobado\nPASE DE LISTA SABATINO\nEXPEDIENTES Y RE-EVALUACIÓN\nCANDIDATOS POR ESCALA\nHISTORIAL\n\nCadetes fuera del remedial con ALCPT por debajo del mínimo aprobatorio de su año (3/er. 31, 4/o. 45; en 1/er. y 2/o. año, sin mínimo oficial, se usa la primera banda de l"
+  },
+  {
+   "prueba": "Ficha: tabla de resultado ALCPT y calificación final",
+   "ok": true,
+   "detalle": "\nEVIDENCIAS Y BITÁCORAS\n\nSin evidencias adjuntas.\n\nNota (opcional)\nAdjuntar archivos\n\nJPG, PNG, PDF, MP3 y WAV hasta 20 MB; Word, Excel y PowerPoint hasta 8 MB. Se guarda el archivo original en este dispositivo.\n\nOBSERVACIONES\nTemas a reforzar, conducta, acuerdos y seguimiento\nCerrar\nGuardar cambios"
+  },
+  {
+   "prueba": "Respaldo JSON v1.1 guarda los mínimos por año",
+   "ok": true,
+   "detalle": "1.1"
+  },
+  {
+   "prueba": "Sin errores de consola",
+   "ok": true,
+   "detalle": "[]"
+  }
+ ]
+}

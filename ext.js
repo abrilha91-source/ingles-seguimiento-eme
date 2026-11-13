@@ -3,12 +3,13 @@
    lectura local de archivos para Importar, respaldos y ajustes extra. */
 (function (G) {
 "use strict";
-const VER = "1.0";
+const VER = "1.1";
+const AP = () => G.ReplicaIng.ap;
 const MES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
 const MESL = {ene:0,feb:1,mar:2,abr:3,may:4,jun:5,jul:6,ago:7,sep:8,oct:9,nov:10,dic:11,jan:0,apr:3,aug:7,dec:11};
 const DEF = {
   ciclo: "2026-2027", semestre: "1",
-  escalaAlcpt: [{min:0,max:29,c:"#C6334A",t:"Remedial obligatorio"},{min:30,max:49,c:"#D98200",t:"Riesgo: candidato a remedial"},{min:50,max:69,c:"#2762C8",t:"En desarrollo"},{min:70,max:100,c:"#11794B",t:"Meta alcanzada"}],
+  escalaAlcpt: [{min:0,max:29,c:"#C6334A",t:"Remedial obligatorio"},{min:30,max:49,c:"#D98200",t:"Riesgo: candidato a remedial"},{min:50,max:69,c:"#2762C8",t:"En desarrollo"},{min:70,max:100,c:"#11794B",t:"Puntaje alto"}],
   escalaAlc: [{min:0,max:59,c:"#C6334A",t:"Remedial obligatorio"},{min:60,max:69,c:"#D98200",t:"Riesgo"},{min:70,max:84,c:"#2762C8",t:"Suficiente"},{min:85,max:100,c:"#11794B",t:"Sobresaliente"}],
   planAlc: [{a:"1",sem:"2",libros:"4-5"},{a:"2",sem:"1",libros:"6-7"},{a:"2",sem:"2",libros:"8-9"},{a:"3",sem:"1",libros:"10-11"},{a:"3",sem:"2",libros:"12-13"},{a:"4",sem:"1",libros:"14-15"},{a:"4",sem:"2",libros:"16-17"}]
 };
@@ -75,6 +76,7 @@ function axAlcpt() {
   const L = roster(), isNew = AX.lab === "__new", isD = AX.lab === "__diag";
   const get = o => isD ? { v: o.diag, m: o.diagMeta || {} } : (() => { const h = (o.alcpt || []).find(x => x[0] === AX.lab); return { v: h ? h[1] : null, m: ((o.alcptMeta || {})[AX.lab]) || {} }; })();
   const vals = isNew ? [] : L.filter(o => !o.ex).map(o => nv(get(o).v)).filter(v => v != null);
+  const rlab = isD ? "Sep 2026" : AX.lab, RS = isNew ? [] : L.filter(o => !o.ex).map(o => AP().res(o, get(o).v, rlab)), nAp = RS.filter(r => r.st === "ap").length, nNa = RS.filter(r => r.st === "na").length, nSin = RS.filter(r => r.st === "sin").length;
   B.innerHTML = `<div class="bar">${rosterSel()}
     <select id="axL" aria-label="Examen">${opts.map(([k, t]) => `<option value="${esc(k)}" ${AX.lab === k ? "selected" : ""}>${esc(t)}</option>`).join("")}<option value="__new" ${isNew ? "selected" : ""}>+ Registrar examen nuevo…</option></select></div>
   ${isNew ? `<div class="impbox"><div class="bar"><label class="hint">Etiqueta (mes y año)<input id="axNL" placeholder="Ej. Nov 2026" value="${esc(AX.nlab)}"></label>
@@ -82,12 +84,14 @@ function axAlcpt() {
     <label class="hint">Fecha de aplicación<input type="date" id="axNF" value="${esc(AX.nfecha)}"></label>
     <button class="btn" id="axNOk">Crear y capturar</button></div><p class="hint">La etiqueta agrupa los puntajes de todos los cadetes que presentaron ese examen.</p></div>` : `
   <section class="gmon"><div class="gm-k"><em>Promedio</em><b>${f1(avg(vals))}</b></div><div class="gm-k"><em>Capturados</em><b>${vals.length}<small>/${L.filter(o => !o.ex).length}</small></b></div>
-    <div class="gm-k"><em>Mínimo · máximo</em><b>${vals.length ? Math.min(...vals) + "<small> · " + Math.max(...vals) + "</small>" : "—"}</b></div><div class="gm-h esc-h">${distHTML(vals, "alcpt")}</div></section>
-  ${escLeg("alcpt")}
-  <div class="tscroll"><table class="tbl cap"><thead><tr><th>Cadete</th><th class="num">Puntaje (0–100)</th><th>Escala</th><th>Fecha</th><th>Forma (después de aplicar)</th><th>Tipo</th></tr></thead><tbody>
+    <div class="gm-k"><em>Mínimo · máximo</em><b>${vals.length ? Math.min(...vals) + "<small> · " + Math.max(...vals) + "</small>" : "—"}</b></div>
+    <div class="gm-k"><em>Aprobados · no aprobados</em><b>${nAp + nNa ? nAp + "<small> · " + nNa + " (" + AP().pct(nAp, nNa) + "% aprob.)</small>" : nSin ? "<small>Sin mínimo oficial</small>" : "—"}</b></div><div class="gm-h esc-h">${distHTML(vals, "alcpt")}</div></section>
+  ${escLeg("alcpt")}<p class="hint">Resultado: mínimo aprobatorio del año que cursaba el cadete al presentar el examen (Ajustes). Oficial: 3/er. año 31 pts, 4/o. año 45 pts; 1/er. y 2/o. año sin mínimo oficial.</p>
+  <div class="tscroll"><table class="tbl cap"><thead><tr><th>Cadete</th><th class="num">Puntaje (0–100)</th><th>Escala</th><th>Resultado</th><th>Fecha</th><th>Forma (después de aplicar)</th><th>Tipo</th></tr></thead><tbody>
   ${L.map(o => { const x = get(o), v = nv(x.v), b = banda(v, "alcpt"); return `<tr data-row="${o.id}"><td><button class="nameb" data-id="${o.id}">${esc(o.n)}</button><span class="sub">${grpLabel(o)}${o.ex ? " · exento" : ""}</span></td>
     <td class="num"><input type="number" inputmode="numeric" min="0" max="100" step="1" data-f="v" value="${v ?? ""}" aria-label="Puntaje de ${esc(o.n)}"></td>
     <td>${v == null ? "—" : `<span class="esc" style="--c:${esc(b ? b.c : "#888")}">${esc(b ? b.t : "fuera de escala")}</span>`}</td>
+    <td>${AP().chip(AP().res(o, v, rlab))}</td>
     <td><input type="date" data-f="fecha" value="${esc(x.m.fecha || "")}" aria-label="Fecha de ${esc(o.n)}"></td>
     <td><input data-f="forma" value="${esc(x.m.forma || "")}" ${v == null ? "disabled placeholder=\"Se anota al aplicar\"" : "placeholder=\"Forma aplicada\""} aria-label="Forma aplicada a ${esc(o.n)}" style="max-width:130px"></td>
     <td>${isD ? "Diagnóstico" : `<select data-f="tipo" aria-label="Tipo">${TIPO_ALCPT.map(([k, t]) => `<option value="${k}" ${(x.m.tipo || "periodo") === k ? "selected" : ""}>${t}</option>`).join("")}</select>`}</td></tr>`; }).join("")}
@@ -161,12 +165,13 @@ function axAlc() {
 function axRes() {
   const B = $("#axBody"), labs = allLabels(), ys = YRS();
   const rows = []; ys.forEach(a => { const gs = groups(a); [...gs, null].forEach(g => { const L = all().filter(o => o.a === a && !o.ex && (g == null || String(o.g) === g));
-    rows.push({ a, g, n: L.length, d: g == null ? "" : ((L.find(o => o.d) || {}).d || ""), diag: avg(L.map(o => nv(o.diag))), labs: labs.map(l => avg(L.map(o => { const h = (o.alcpt || []).find(x => x[0] === l); return h ? nv(h[1]) : null; }))), alc: avg(L.map(o => alcAvg(o))), tot: g == null }); }); });
+    rows.push({ a, g, n: L.length, d: g == null ? "" : ((L.find(o => o.d) || {}).d || ""), diag: avg(L.map(o => nv(o.diag))), labs: labs.map(l => avg(L.map(o => { const h = (o.alcpt || []).find(x => x[0] === l); return h ? nv(h[1]) : null; }))), alc: avg(L.map(o => alcAvg(o))), tot: g == null,
+      ap: ["diagRes", "lastRes"].map(f => { const R = L.map(o => AP()[f](o)); const a = R.filter(r => r.st === "ap").length, n = R.filter(r => r.st === "na").length; return { a, n, s: R.filter(r => r.st === "sin").length }; }) }); }); });
   const showLabs = labs.filter((l, i) => rows.some(r => r.labs[i] != null));
   B.innerHTML = `<p class="hint">Promedios sin exentos. ALCPT en escala 0–100; ALC es el promedio de todos los exámenes de libro capturados.</p>
-  <div class="tscroll"><table class="tbl"><thead><tr><th>Año</th><th>Grupo</th><th>Docente</th><th class="num">Cadetes</th><th class="num">Diag. 2026</th>${showLabs.map(l => `<th class="num">ALCPT ${esc(l)}</th>`).join("")}<th class="num">ALC</th></tr></thead><tbody>
+  <div class="tscroll"><table class="tbl"><thead><tr><th>Año</th><th>Grupo</th><th>Docente</th><th class="num">Cadetes</th><th class="num">Diag. 2026</th>${showLabs.map(l => `<th class="num">ALCPT ${esc(l)}</th>`).join("")}<th class="num">ALC</th><th class="num">Diag.: aprob. / no aprob.</th><th class="num">Último ALCPT: aprob. / no aprob.</th></tr></thead><tbody>
   ${rows.map(r => `<tr class="${r.tot ? "total" : ""}"><td>${ANIO[r.a]} año</td><td>${r.g == null ? "Total" : "Grupo " + esc(r.g)}</td><td>${esc(r.d)}</td><td class="num">${r.n}</td><td class="num">${chipEsc(r.diag == null ? null : Math.round(r.diag), "alcpt")}</td>
-  ${showLabs.map(l => { const v = r.labs[labs.indexOf(l)]; return `<td class="num">${chipEsc(v == null ? null : Math.round(v), "alcpt")}</td>`; }).join("")}<td class="num">${chipEsc(r.alc == null ? null : Math.round(r.alc), "alc")}</td></tr>`).join("")}</tbody></table></div>`;
+  ${showLabs.map(l => { const v = r.labs[labs.indexOf(l)]; return `<td class="num">${chipEsc(v == null ? null : Math.round(v), "alcpt")}</td>`; }).join("")}<td class="num">${chipEsc(r.alc == null ? null : Math.round(r.alc), "alc")}</td>${r.ap.map(x => `<td class="num">${x.a + x.n ? `${x.a} / ${x.n}<span class="sub">${AP().pct(x.a, x.n)}% aprob.</span>` : x.s ? `<span class="sub">sin mínimo oficial</span>` : "—"}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 function axPlan() {
   const P = cfg("planAlc");
@@ -254,11 +259,12 @@ function rxCand() {
   const E = cfg("escalaAlcpt"), EA = cfg("escalaAlc"); const low = E[0], lowA = EA[0];
   const C = all().filter(o => !o.ex && !inRem(o)).map(o => { const la = lastAl(o), al = la ? nv(la[1]) : null, dg = nv(o.diag), ult = (o.alc || []).slice().sort((x, y) => String(x.fecha).localeCompare(String(y.fecha))).pop();
     const why = []; const ref = dg != null && (!la || labKey(la[0]) < Date.UTC(2026, 8, 1)) ? dg : al;
-    if (ref != null && ref >= low.min && ref <= low.max) why.push(`ALCPT ${ref} (${low.t.toLowerCase()})`);
+    const mn = AP().minFor(String(o.a)); if (ref != null && mn.min != null) { if (ref < mn.min) why.push(`ALCPT ${ref}, por debajo del mínimo de ${ANIO[o.a]} año (${mn.min})`); }
+    else if (ref != null && ref >= low.min && ref <= low.max) why.push(`ALCPT ${ref} (${low.t.toLowerCase()})`);
     if (ult && nv(ult.pts) != null && nv(ult.pts) >= lowA.min && nv(ult.pts) <= lowA.max) why.push(`ALC libro ${ult.libro}: ${ult.pts}`);
     if (estAc(o) === "bad") why.push(`promedio ${prom(o).toFixed(2)}`);
     return { o, why, ref }; }).filter(x => x.why.length).sort((x, y) => (x.ref ?? 999) - (y.ref ?? 999));
-  $("#rxBody").innerHTML = `<p class="lead">Cadetes fuera del remedial cuyo último puntaje cae en la primera banda de la escala (${low.min}–${low.max} en ALCPT, ${lowA.min}–${lowA.max} en ALC) o con promedio reprobatorio. La escala se cambia en Ajustes.</p>
+  $("#rxBody").innerHTML = `<p class="lead">Cadetes fuera del remedial con ALCPT por debajo del mínimo aprobatorio de su año (3/er. 31, 4/o. 45; en 1/er. y 2/o. año, sin mínimo oficial, se usa la primera banda de la escala: ${low.min}–${low.max}), con ALC en ${lowA.min}–${lowA.max} o con promedio reprobatorio. Se cambia en Ajustes.</p>
   ${C.length ? `<div class="tscroll"><table class="tbl"><thead><tr><th>Cadete</th><th class="num">ALCPT de referencia</th><th>Motivo</th><th></th></tr></thead><tbody>${C.map(({ o, why, ref }) => `<tr><td><button class="nameb" data-id="${o.id}">${esc(o.n)}</button><span class="sub">${grpLabel(o)}</span></td><td class="num">${chipEsc(ref, "alcpt")}</td><td>${esc(why.join(" · "))}</td><td><button class="btn small ghost" data-cand="${o.id}">Inscribir</button></td></tr>`).join("")}</tbody></table></div>`
   : `<div class="empty"><strong>Sin candidatos</strong>Ningún cadete fuera del remedial cae en la banda de remedial.</div>`}`;
   VW.querySelectorAll("[data-cand]").forEach(b => b.onclick = () => { const x = C.find(c => c.o.id === b.dataset.cand); inscribirMotivo(x.o, x.why.join(" · "), x.ref); toast("Inscrito al remedial"); render(); });
@@ -327,10 +333,10 @@ function vEme() {
   <select id="emA" aria-label="Año"><option value="">Todos los años</option>${["1", "2", "3", "4"].map(a => `<option value="${a}" ${EM.a === a ? "selected" : ""}>${ANIO[a]} año</option>`).join("")}${nEg ? `<option value="eg" ${EM.a === "eg" ? "selected" : ""}>Egresados</option>` : ""}</select>
   ${nEg ? `<label class="chk"><input type="checkbox" id="emE" ${EM.eg ? "checked" : ""}> Incluir ${nEg} egresados o fuera del ciclo</label>` : ""}
   <span style="flex:1"></span><button class="btn small ghost" id="emXl" ${L.length ? "" : "disabled"}>Kárdex de lo filtrado (.xlsx, ${L.length})</button></div>
-  ${L.length ? `<div class="tscroll"><table class="tbl"><thead><tr><th>Cadete</th><th>Generación</th><th>Situación</th><th class="num">Ciclos</th><th class="num">Primer ALCPT</th><th class="num">Último ALCPT</th><th class="num">Avance</th><th class="num">ALC</th><th class="num">Remediales</th></tr></thead><tbody>
+  ${L.length ? `<div class="tscroll"><table class="tbl"><thead><tr><th>Cadete</th><th>Generación</th><th>Situación</th><th class="num">Ciclos</th><th class="num">Primer ALCPT</th><th class="num">Último ALCPT y resultado</th><th class="num">Avance</th><th class="num">ALC</th><th class="num">Remediales</th></tr></thead><tbody>
   ${L.slice(0, 400).map(o => { const A = alcptList(o).filter(x => nv(x.v) != null), f = A[0], l = A[A.length - 1], d = f && l && A.length > 1 ? nv(l.v) - nv(f.v) : null; return `<tr><td><button class="nameb" data-em="${o.id}">${esc(o.n)}</button><span class="sub">${o.m ? esc(o.m) : "sin matrícula"}</span></td><td>${esc(o.gen || "—")}</td>
     <td>${sitLabel(o)}${inRem(o) ? ` <span class="badge b-rem">Remedial</span>` : ""}</td><td class="num">${trayOf(o).length}</td><td class="num">${f ? chipEsc(nv(f.v), "alcpt") + `<span class="sub">${esc(f.l)}</span>` : "—"}</td>
-    <td class="num">${l ? chipEsc(nv(l.v), "alcpt") + `<span class="sub">${esc(l.l)}</span>` : "—"}</td><td class="num ${d != null && d < 0 ? "lo" : ""}">${d == null ? "—" : (d > 0 ? "+" : "") + d}</td><td class="num">${f1(alcAvg(o))}</td><td class="num">${(o.remHist || []).length || "—"}</td></tr>`; }).join("")}</tbody></table></div>${L.length > 400 ? `<p class="hint">Se muestran 400 de ${L.length}. Usa la búsqueda o los filtros.</p>` : ""}`
+    <td class="num">${l ? chipEsc(nv(l.v), "alcpt") + `<span class="sub">${esc(l.l)}</span>` + AP().badge(AP().res(o, l.v, l.l)) : "—"}</td><td class="num ${d != null && d < 0 ? "lo" : ""}">${d == null ? "—" : (d > 0 ? "+" : "") + d}</td><td class="num">${f1(alcAvg(o))}</td><td class="num">${(o.remHist || []).length || "—"}</td></tr>`; }).join("")}</tbody></table></div>${L.length > 400 ? `<p class="hint">Se muestran 400 de ${L.length}. Usa la búsqueda o los filtros.</p>` : ""}`
   : `<div class="empty"><strong>Sin resultados</strong>Ningún cadete coincide con los filtros.</div>`}`;
   const on = (id, k, ev) => { const el = $(id); if (el) el[ev || "onchange"] = e => { EM[k] = e.target.type === "checkbox" ? e.target.checked : e.target.value; vEme(); if (k === "q") { const i = $("#emQ"); i.focus(); i.setSelectionRange(i.value.length, i.value.length); } }; };
   on("#emQ", "q", "oninput"); on("#emG", "gen"); on("#emA", "a"); on("#emE", "eg");
@@ -353,7 +359,7 @@ function openEme(id) {
   <h3>Trayectoria por ciclo</h3>
   <div class="tscroll"><table class="tbl" style="min-width:860px"><thead><tr><th>Ciclo</th><th>Semestre</th><th>Año</th><th>Grupo</th><th>Docente</th><th>ALCPT</th><th>ALC</th><th class="num">Parciales</th><th>Remedial</th></tr></thead><tbody>
   ${K.map(({ t, al, alc, rem, parc }) => `<tr><td>${esc(t.ciclo)}</td><td>${esc(t.sem || "")}</td><td>${ANIO[t.a] ? ANIO[t.a] + " año" : esc(t.a || "")}</td><td>${esc(t.g || "—")}</td><td>${esc(t.d || "—")}</td>
-    <td>${al.map(x => `<span class="nw">${esc(x.l)}: ${chipEsc(nv(x.v), "alcpt")}</span>`).join("<br>") || "—"}${t.ciclo === "2026-2027" && nv(o.diag) != null ? `<br><span class="nw">Diag.: ${chipEsc(nv(o.diag), "alcpt")}</span>` : ""}</td>
+    <td>${al.map(x => `<span class="nw">${esc(x.l)}: ${chipEsc(nv(x.v), "alcpt")} ${AP().badge(AP().res(o, x.v, x.l))}</span>`).join("<br>") || "—"}${t.ciclo === "2026-2027" && nv(o.diag) != null ? `<br><span class="nw">Diag.: ${chipEsc(nv(o.diag), "alcpt")} ${AP().badge(AP().diagRes(o))}</span>` : ""}</td>
     <td>${alc.map(x => `<span class="nw">L${esc(x.libro)} ${esc((TIPO_ALC.find(k => k[0] === x.tipo) || [, x.tipo])[1].replace("Examen ", ""))}: ${chipEsc(nv(x.pts), "alc")}</span>`).join("<br>") || "—"}</td>
     <td class="num">${parc.length ? (parc.reduce((a, b) => a + b, 0) / parc.length).toFixed(2) : "—"}</td><td>${rem.map(h => `${esc(h.alta)} · ${esc(REM_TXT[h.estatus] || (h.baja ? "cerrado" : "en curso"))}`).join("<br>") || "—"}</td></tr>`).join("")}
   </tbody></table></div>
@@ -370,29 +376,29 @@ function openEme(id) {
 }
 function kardexAoa(o) {
   const K = kardexRows(o), rows = [["KÁRDEX DE INGLÉS · " + o.n], ["Esc. Mil. Enfría. · Mesa de Idioma Extranjero"], ["Matrícula", o.m || "", "Generación", o.gen || "", "Situación", o.eg ? (o.estatus && o.estatus !== "Egresado" ? o.estatus : "Egresado") : `${ANIO[o.a]} año · Grupo ${o.g}`], [],
-    ["Ciclo", "Semestre", "Año", "Grupo", "Docente", "Examen", "Puntaje", "Escala", "Promedio de parciales", "Remedial"]];
-  const merges = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 9 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: 9 } }]; const start = rows.length;
-  K.forEach(({ t, al, alc, rem, parc }) => { const ex = [...al.map(x => ["ALCPT " + x.l, nv(x.v), "alcpt"]), ...(t.ciclo === "2026-2027" && nv(o.diag) != null ? [["Diagnóstico sep 2026", nv(o.diag), "alcpt"]] : []), ...alc.map(x => [`ALC libro ${x.libro} · ${(TIPO_ALC.find(k => k[0] === x.tipo) || [, x.tipo])[1]}`, nv(x.pts), "alc"])];
+    ["Ciclo", "Semestre", "Año", "Grupo", "Docente", "Examen", "Puntaje", "Escala", "Resultado", "Promedio de parciales", "Remedial"]];
+  const merges = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 10 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: 10 } }]; const start = rows.length;
+  K.forEach(({ t, al, alc, rem, parc }) => { const ex = [...al.map(x => ["ALCPT " + x.l, nv(x.v), "alcpt", AP().res(o, x.v, x.l)]), ...(t.ciclo === "2026-2027" && nv(o.diag) != null ? [["Diagnóstico sep 2026", nv(o.diag), "alcpt", AP().diagRes(o)]] : []), ...alc.map(x => [`ALC libro ${x.libro} · ${(TIPO_ALC.find(k => k[0] === x.tipo) || [, x.tipo])[1]}`, nv(x.pts), "alc", null])];
     const pr = parc.length ? Math.round(parc.reduce((a, b) => a + b, 0) / parc.length * 100) / 100 : ""; const rm = rem.map(h => `${h.alta} · ${REM_TXT[h.estatus] || (h.baja ? "cerrado" : "en curso")}`).join("; ");
-    (ex.length ? ex : [["", "", ""]]).forEach(e => { const b = banda(e[1], e[2]); rows.push([t.ciclo, t.sem || "", ANIO[t.a] ? ANIO[t.a] + " año" : (t.a || ""), t.g || "", t.d || "", e[0], e[1] ?? "", b ? b.t : "", pr, rm]); }); });
-  const end = rows.length - 1; if (end >= start) merges.push(...XL.runs(rows, [0, 1, 2, 3, 4, 8, 9], start, end));
-  rows.push([], ["Remediales"]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 9 } });
-  rows.push(["Alta", "Baja", "Motivo", "", "", "Estatus", "Puntaje de ingreso", "", "Cierre", ""]); const hr = rows.length - 1;
-  (o.remHist || []).forEach(h => { rows.push([h.alta || "", h.baja || "", h.motivo || "", "", "", REM_TXT[h.estatus] || "", h.puntaje ?? "", "", h.motivoBaja || "", ""]); const r = rows.length - 1; merges.push({ s: { r, c: 2 }, e: { r, c: 4 } }, { s: { r, c: 6 }, e: { r, c: 7 } }, { s: { r, c: 8 }, e: { r, c: 9 } }); });
-  if (!(o.remHist || []).length) { rows.push(["Sin remediales", "", "", "", "", "", "", "", "", ""]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 9 } }); }
-  merges.push({ s: { r: hr, c: 2 }, e: { r: hr, c: 4 } }, { s: { r: hr, c: 6 }, e: { r: hr, c: 7 } }, { s: { r: hr, c: 8 }, e: { r: hr, c: 9 } });
+    (ex.length ? ex : [["", "", "", null]]).forEach(e => { const b = banda(e[1], e[2]), r = e[3]; rows.push([t.ciclo, t.sem || "", ANIO[t.a] ? ANIO[t.a] + " año" : (t.a || ""), t.g || "", t.d || "", e[0], e[1] ?? "", b ? b.t : "", r && r.st !== "nd" ? AP().txt(r) + (r.min != null ? ` (mín. ${r.min})` : "") : "", pr, rm]); }); });
+  const end = rows.length - 1; if (end >= start) merges.push(...XL.runs(rows, [0, 1, 2, 3, 4, 9, 10], start, end));
+  rows.push([], ["Remediales"]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 10 } });
+  rows.push(["Alta", "Baja", "Motivo", "", "", "Estatus", "Puntaje de ingreso", "", "Cierre", "", ""]); const hr = rows.length - 1;
+  (o.remHist || []).forEach(h => { rows.push([h.alta || "", h.baja || "", h.motivo || "", "", "", REM_TXT[h.estatus] || "", h.puntaje ?? "", "", h.motivoBaja || "", "", ""]); const r = rows.length - 1; merges.push({ s: { r, c: 2 }, e: { r, c: 4 } }, { s: { r, c: 6 }, e: { r, c: 7 } }, { s: { r, c: 8 }, e: { r, c: 10 } }); });
+  if (!(o.remHist || []).length) { rows.push(["Sin remediales", "", "", "", "", "", "", "", "", "", ""]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 10 } }); }
+  merges.push({ s: { r: hr, c: 2 }, e: { r: hr, c: 4 } }, { s: { r: hr, c: 6 }, e: { r: hr, c: 7 } }, { s: { r: hr, c: 8 }, e: { r: hr, c: 10 } });
   const obs = [...(o.obsHist || []).map(x => `${x.fecha}: ${x.txt}`), ...(o.obs ? [o.obs] : [])];
-  rows.push([], ["Observaciones"]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 9 } });
-  (obs.length ? obs : ["Sin observaciones"]).forEach(t => { rows.push([t]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 9 } }); });
+  rows.push([], ["Observaciones"]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 10 } });
+  (obs.length ? obs : ["Sin observaciones"]).forEach(t => { rows.push([t]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 10 } }); });
   return { rows, merges, hdr: [4, hr] };
 }
 async function kardexXlsx(L) { try { toast("Preparando kárdex…"); const X = await XL.lib(), wb = X.utils.book_new(); const used = new Set();
   L.forEach(o => { const k = kardexAoa(o); let nm = (o.n || "Cadete").replace(/[\\/?*\[\]:]/g, "").slice(0, 28); let i = 2; while (used.has(nm)) nm = nm.slice(0, 26) + " " + i++; used.add(nm);
-    X.utils.book_append_sheet(wb, XL.sheet(X, k.rows, [11, 13, 9, 8, 26, 30, 9, 22, 12, 26], k.merges, k.hdr), nm); });
+    X.utils.book_append_sheet(wb, XL.sheet(X, k.rows, [11, 13, 9, 8, 26, 30, 9, 22, 22, 12, 26], k.merges, k.hdr), nm); });
   await XL.save(X, wb, L.length === 1 ? `KARDEX INGLES ${L[0].n} ${hoy()}.xlsx` : `KARDEX INGLES ${L.length} cadetes ${hoy()}.xlsx`); toast("Kárdex descargado"); } catch (e) { console.error(e); toast("No se pudo preparar el kárdex"); } }
 function printKardex(o) { const k = kardexAoa(o); const M = new Map(); const skip = new Set();
   k.merges.forEach(m => { M.set(m.s.r + "," + m.s.c, m); for (let r = m.s.r; r <= m.e.r; r++) for (let c = m.s.c; c <= m.e.c; c++) if (r !== m.s.r || c !== m.s.c) skip.add(r + "," + c); });
-  const html = k.rows.map((row, r) => row.length ? `<tr>${row.map((v, c) => { if (skip.has(r + "," + c)) return ""; const m = M.get(r + "," + c); const at = m ? ` rowspan="${m.e.r - m.s.r + 1}" colspan="${m.e.c - m.s.c + 1}"` : ""; const tag = r < 2 || k.hdr.includes(r) ? "th" : "td"; return `<${tag}${at}>${esc(v ?? "")}</${tag}>`; }).join("")}</tr>` : `<tr class="sp"><td colspan="10"></td></tr>`).join("");
+  const html = k.rows.map((row, r) => row.length ? `<tr>${row.map((v, c) => { if (skip.has(r + "," + c)) return ""; const m = M.get(r + "," + c); const at = m ? ` rowspan="${m.e.r - m.s.r + 1}" colspan="${m.e.c - m.s.c + 1}"` : ""; const tag = r < 2 || k.hdr.includes(r) ? "th" : "td"; return `<${tag}${at}>${esc(v ?? "")}</${tag}>`; }).join("")}</tr>` : `<tr class="sp"><td colspan="11"></td></tr>`).join("");
   $("#printArea").innerHTML = `<table class="kx">${html}</table>`; document.body.classList.add("printing"); setTimeout(() => { window.print(); setTimeout(() => document.body.classList.remove("printing"), 400); }, 60); }
 G.vEme = vEme; G.ReplicaIng.openEme = openEme; G.ReplicaIng.kardexAoa = kardexAoa; G.ReplicaIng.kardexXlsx = kardexXlsx; G.ReplicaIng.trayOf = trayOf;
 
@@ -481,12 +487,27 @@ async function importLista(file) { try { const X = await loadXLSX(); const wb = 
   if (!items.length) { toast("No se encontró una tabla con columnas Año, Grupo y Nombre"); return; }
   await S.db._bulk(items); await S.db._notify("alumnos"); toast(`${n} cadetes nuevos · ${upd} actualizados`); } catch (e) { console.error(e); toast("No se pudo leer la lista"); } }
 async function concentradoXlsx() { try { const X = await XL.lib(), wb = X.utils.book_new(), L = all().sort((x, y) => x.a.localeCompare(y.a) || String(x.g).localeCompare(String(y.g)) || x.n.localeCompare(y.n, "es")); const labs = allLabels();
-  const head = ["Año", "Grupo", "Docente", "Nombre", "Matrícula", "Exento", "Diagnóstico 2026", ...labs.map(l => "ALCPT " + l), "ALC promedio", ...PARC.map(p => p[1]), "Promedio", "Estado", "Remedial", "Estatus remedial", "Faltas sabatinas"];
+  const head = ["Año", "Grupo", "Docente", "Nombre", "Matrícula", "Exento", "Diagnóstico 2026", ...labs.map(l => "ALCPT " + l), "ALC promedio", ...PARC.map(p => p[1]), "Promedio", "Estado", "Remedial", "Estatus remedial", "Faltas sabatinas", "Mínimo ALCPT del año", "Resultado diagnóstico", "Último ALCPT", "Resultado último ALCPT", "Monitor", "Calificación final"];
   const rows = [["CONCENTRADO DE INGLÉS · " + cfg("ciclo")], ["Esc. Mil. Enfría. · Mesa de Idioma Extranjero · " + hoy()], head];
-  L.forEach(o => rows.push([ANIO[o.a] + " año", "Grupo " + o.g, o.d || "", o.n, o.m || "", o.ex ? "Sí" : "", o.diag ?? "", ...labs.map(l => { const h = (o.alcpt || []).find(x => x[0] === l); return h ? h[1] : ""; }), alcAvg(o) == null ? "" : Math.round(alcAvg(o) * 10) / 10, ...parts(o).map(v => v == null ? "" : v), prom(o) == null ? "" : prom(o), o.ex ? "Exento" : EST_TXT[estAc(o)], inRem(o) ? "Sí" : "", o.rem ? REM_TXT[remEst(o)] || "" : "", inRem(o) ? faltas(o) : ""]));
+  L.forEach(o => rows.push([ANIO[o.a] + " año", "Grupo " + o.g, o.d || "", o.n, o.m || "", o.ex ? "Sí" : "", o.diag ?? "", ...labs.map(l => { const h = (o.alcpt || []).find(x => x[0] === l); return h ? h[1] : ""; }), alcAvg(o) == null ? "" : Math.round(alcAvg(o) * 10) / 10, ...parts(o).map(v => v == null ? "" : v), prom(o) == null ? "" : prom(o), o.ex ? "Exento" : EST_TXT[estAc(o)], inRem(o) ? "Sí" : "", o.rem ? REM_TXT[remEst(o)] || "" : "", inRem(o) ? faltas(o) : "", ...concAp(o)]));
   const W = head.length; const merges = [{ s: { r: 0, c: 0 }, e: { r: 0, c: W - 1 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: W - 1 } }, ...XL.runs(rows, [0, 1, 2], 3, rows.length - 1)];
-  X.utils.book_append_sheet(wb, XL.sheet(X, rows, [9, 10, 28, 36, 14, 7, 10, ...labs.map(() => 10), 9, 10, 10, 10, 9, 14, 9, 14, 9], merges, [2]), "Concentrado");
+  X.utils.book_append_sheet(wb, XL.sheet(X, rows, [9, 10, 28, 36, 14, 7, 10, ...labs.map(() => 10), 9, 10, 10, 10, 9, 14, 9, 14, 9, 12, 18, 12, 22, 9, 12], merges, [2]), "Concentrado");
+  apSheet(X, wb, L);
   await XL.save(X, wb, `CONCENTRADO INGLES ${hoy()}.xlsx`); toast("Concentrado descargado"); } catch (e) { console.error(e); toast("No se pudo preparar el concentrado"); } }
+function concAp(o) { const A = AP(), m = A.minFor(String(o.a)), d = A.diagRes(o), l = A.lastRes(o), f = A.calFinal(o);
+  return [m.min == null ? "Sin mínimo oficial" : m.min + (m.oficial ? "" : " (por confirmar)"), d.st === "nd" ? "" : A.txt(d), l.st === "nd" ? "" : `${l.v} (${l.lab})`, l.st === "nd" ? "" : A.txt(l) + (l.min != null && l.a !== String(o.a) ? ` · mín. ${l.min} de ${ANIO[l.a]} año` : ""), A.monitor(o) ? "Sí" : "", f.st === "extra" ? "Extraordinario" : f.v != null ? f.v : ""]; }
+/* hoja de aprobación ALCPT por año y grupo (diagnóstico y último examen) */
+function apSheet(X, wb, L) { const A = AP(), rows = [["APROBACIÓN ALCPT POR AÑO Y GRUPO · " + cfg("ciclo")], ["Mínimo oficial: 3/er. año 31 pts, 4/o. año 45 pts (Mensaje C.E.I. SAC./P.C.-100, 22 sep. 2026). 1/er. y 2/o. año sin mínimo oficial."],
+    ["Año", "Grupo", "Cadetes", "Mínimo", "Diagnóstico 21 sep. 2026", "", "", "", "Último ALCPT registrado", "", "", ""], ["", "", "", "", "Aprobados", "No aprobados", "Sin mínimo", "% aprobación", "Aprobados", "No aprobados", "Sin mínimo", "% aprobación"]];
+  const merges = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 11 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: 11 } }, { s: { r: 2, c: 4 }, e: { r: 2, c: 7 } }, { s: { r: 2, c: 8 }, e: { r: 2, c: 11 } }, ...[0, 1, 2, 3].map(c => ({ s: { r: 2, c }, e: { r: 3, c } }))];
+  const cnt = (Y, f) => { const c = { ap: 0, na: 0, sin: 0, nd: 0 }; Y.forEach(o => c[A[f](o).st]++); return [c.ap, c.na, c.sin, A.pct(c.ap, c.na) ?? ""]; };
+  const st = rows.length; ["1", "2", "3", "4"].forEach(a => { const Y = L.filter(o => o.a === a); if (!Y.length) return; const m = A.minFor(a), mt = m.min == null ? "Sin mínimo oficial" : m.min + (m.oficial ? "" : " (por confirmar)");
+    [...new Set(Y.map(o => String(o.g)))].sort((x, y) => x.localeCompare(y, "es", { numeric: true })).forEach(g => { const G2 = Y.filter(o => String(o.g) === g); rows.push([ANIO[a] + " año", "Grupo " + g, G2.length, mt, ...cnt(G2, "diagRes"), ...cnt(G2, "lastRes")]); });
+    rows.push([ANIO[a] + " año", "Total del año", Y.length, mt, ...cnt(Y, "diagRes"), ...cnt(Y, "lastRes")]); });
+  merges.push(...XL.runs(rows, [0, 3], st, rows.length - 1));
+  rows.push([], ["Cada examen se califica con el mínimo del año que cursaba el cadete al presentarlo. El % se calcula sobre aprobados + no aprobados."]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 11 } });
+  X.utils.book_append_sheet(wb, XL.sheet(X, rows, [10, 14, 9, 16, 11, 11, 11, 12, 11, 11, 11, 12], merges, [2, 3]), "Aprobación ALCPT"); }
+G.ReplicaIng.apSheet = apSheet;
 /* cierre de ciclo: guarda la trayectoria y promueve de año; 4/o. año pasa a egresado */
 async function cerrarCiclo(nuevo) { const c = cfg("ciclo"), sm = cfg("semestre") === "2" ? "2/o. semestre" : "1/er. semestre"; const items = [];
   all().forEach(o => { const x = clone(o); delete x.id; const T = (x.tray || []).filter(t => !(t.ciclo === c && t.sem === sm)); const parc = PARC.map(([k]) => ptot(x.cal && x.cal[k])).filter(v => v != null);

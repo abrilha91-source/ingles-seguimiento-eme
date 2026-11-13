@@ -1,4 +1,4 @@
-/* Seguimiento de inglés · réplica local v1.0. Código del artefacto original con parches de tools/build.py */
+/* Seguimiento de inglés · réplica local v1.1. Código del artefacto original con parches de tools/build.py */
 
 const $=s=>document.querySelector(s), VW=$("#view");
 const ANIO={"1":"1/er.","2":"2/o.","3":"3/er.","4":"4/o."};

@@ -1,4 +1,4 @@
-# Seguimiento de inglés · réplica v1.0
+# Seguimiento de inglés · réplica v1.1
 
 Aplicación web (PWA) para llevar el seguimiento de la asignatura de inglés de la Escuela Militar de Enfermería: calificaciones parciales, ALCPT, ALC por libro, curso remedial sabatino, estadística y el seguimiento de cada cadete durante toda su estancia en la EME (1/o. a 4/o. año).
 
@@ -19,6 +19,15 @@ Funciona en el navegador, sin servidor y sin conexión una vez abierta. **Se pub
 
 Los documentos de Excel se generan en Noto Sans 10 y combinan las celdas que comparten información.
 
+## Aprobación ALCPT por año (v1.1)
+- **Mínimo aprobatorio oficial:** 3/er. año (Inglés III) 31 puntos y 4/o. año (Inglés V) 45 puntos, según el Mensaje C.E.I. SAC./P.C.-100 del 22 sep. 2026 (cumple el SFPM/SAC.-987 del 17 sep. 2026). Conversión: 3/er. 36+=10, 35=9, 34=8, 33=7, 32=6.5, 31=6; 4/o. 50=10, 49=9, 48=8, 47=7, 46=6.5, 45=6.
+- **1/er. y 2/o. año:** sin mínimo oficial («Sin mínimo oficial»). Opción en Ajustes para usar 26 puntos del programa «Idioma Extranjero II», marcado «por confirmar».
+- El puntaje de referencia al concluir cada semestre (tabla C.2, 30 sep. 2026) se muestra como referencia y no decide la aprobación.
+- Cada examen se califica con el mínimo del año que cursaba el cadete al presentarlo (se puede cambiar al año actual en Ajustes).
+- Aprobado / No aprobado en Cadetes (insignias), ficha, ALC y ALCPT, Seguimiento EME y kárdex, Panorama (tabla por año), Estadística (conteos y % por año y grupo; hoja «Aprobación ALCPT» en el Excel) y concentrado.
+- Monitor: calificación diagnóstica mayor a 7.0. Remedial: candidato quien queda por debajo del mínimo de su año; «Puede salir del remedial» al alcanzar el mínimo en un examen posterior al alta.
+- Calificación final = parciales 60 % + A.L.C.P.T. final convertido 40 % (configurable); A.L.C.P.T. final por debajo del mínimo = extraordinario.
+
 ## Cargar datos
 1. Ajustes → **Cargar respaldo (.json)**, o
 2. Ajustes → **Importar lista de cadetes** (Excel/CSV con columnas Año, Grupo, Nombre; opcionales Matrícula, Docente, Compañía, Exento, Generación).
@@ -30,4 +39,4 @@ Los nombres se guardan tal como vienen en la lista oficial.
 - La transcripción de audio descarga el modelo la primera vez (requiere conexión esa vez).
 
 ## Pruebas
-`tests/test_ingles.py` (Playwright) usa solo datos sintéticos de `tests/fixtures/`.
+`tests/test_ingles.py` y `tests/test_aprob.py` (Playwright) usan solo datos sintéticos.

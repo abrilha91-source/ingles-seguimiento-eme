@@ -1,5 +1,5 @@
 {
- "fecha": "2026-11-13 03:13",
+ "fecha": "2026-11-13 05:59",
  "correctas": 62,
  "total": 62,
  "pruebas": [
@@ -71,7 +71,7 @@
   {
    "prueba": "ALCPT: color de escala (0–29 remedial)",
    "ok": true,
-   "detalle": "Agata Villegas Mara\n4/o. año · Grupo 1\n\t\tRemedial obligatorio\t\t\t\nDiagnóstico\nPeriodo\nFinal\nSeguimiento"
+   "detalle": "Agata Villegas Mara\n4/o. año · Grupo 1\n\t\tRemedial obligatorio\tNo aprobado\nmín. 45 · 4/o. año\n\t\t\t\nDiagnóstico\nPeriodo\nFinal\nSeguimiento"
   },
   {
    "prueba": "ALCPT: la forma se habilita solo después del puntaje",
@@ -91,7 +91,7 @@
   {
    "prueba": "ALC/ALCPT: tabla de promedios",
    "ok": true,
-   "detalle": "Promedios sin exentos. ALCPT en escala 0–100; ALC es el promedio de todos los exámenes de libro capturados.\n\nAÑO\tGRUPO\tDOCENTE\tCADETES\tDIAG. 2026\tALCPT NOV 2026\tALC\n2/o. año\tGrupo 1\tDocente Sintetico "
+   "detalle": "Promedios sin exentos. ALCPT en escala 0–100; ALC es el promedio de todos los exámenes de libro capturados.\n\nAÑO\tGRUPO\tDOCENTE\tCADETES\tDIAG. 2026\tALCPT NOV 2026\tALC\tDIAG.: APROB. / NO APROB.\tÚLTIMO AL"
   },
   {
    "prueba": "Plan de libros visible",
@@ -136,7 +136,7 @@
   {
    "prueba": "Kárdex .xlsx: Noto Sans 10 y celdas combinadas",
    "ok": true,
-   "detalle": "(45, 0, 17)"
+   "detalle": "(47, 0, 17)"
   },
   {
    "prueba": "Kárdex no muestra la forma del examen",
@@ -161,7 +161,7 @@
   {
    "prueba": "Estadística .xlsx: Noto Sans 10, combinadas",
    "ok": true,
-   "detalle": "(78, 0, 12, ['Resumen', 'Detalle'])"
+   "detalle": "(142, 0, 23, ['Resumen', 'Detalle', 'Aprobación ALCPT'])"
   },
   {
    "prueba": "Estadística: «inasistencias del remedial por causa»",
@@ -216,7 +216,7 @@
   {
    "prueba": "Importar pdf_escaneado: filas asociadas a cadetes",
    "ok": true,
-   "detalle": "6/6 · 1s"
+   "detalle": "6/6 · 2s"
   },
   {
    "prueba": "Importar png: filas asociadas a cadetes",
@@ -231,12 +231,12 @@
   {
    "prueba": "Importar wav: audio leído o explicado",
    "ok": true,
-   "detalle": "0 filas · 7s · Leer archivo\nQuitar archivos\n\nNo se reconoció ningún renglón con nombre de cadete. Revisa que la lista esté completa y legible.\n\nIMPORTACIONES ANTERIORES\nFECHA\t"
+   "detalle": "0 filas · 8s · Leer archivo\nQuitar archivos\n\nNo se reconoció ningún renglón con nombre de cadete. Revisa que la lista esté completa y legible.\n\nIMPORTACIONES ANTERIORES\nFECHA\t"
   },
   {
    "prueba": "Importar mp3: audio leído o explicado",
    "ok": true,
-   "detalle": "0 filas · 2s · Leer archivo\nQuitar archivos\n\nNo se reconoció ningún renglón con nombre de cadete. Revisa que la lista esté completa y legible.\n\nIMPORTACIONES ANTERIORES\nFECHA\t"
+   "detalle": "0 filas · 3s · Leer archivo\nQuitar archivos\n\nNo se reconoció ningún renglón con nombre de cadete. Revisa que la lista esté completa y legible.\n\nIMPORTACIONES ANTERIORES\nFECHA\t"
   },
   {
    "prueba": "Importar: tipo ALC con libro y examen",
@@ -261,7 +261,7 @@
   {
    "prueba": "Concentrado .xlsx: Noto Sans 10, combinadas",
    "ok": true,
-   "detalle": "(106, 0, 17)"
+   "detalle": "(241, 0, 32)"
   },
   {
    "prueba": "Ajustes: escala guardada",
