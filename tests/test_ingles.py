@@ -63,7 +63,7 @@ with sync_playwright() as p:
     rec("ALC: puntajes guardados y promedio", "72.3" in pg.inner_text("#axBody") or "72" in pg.inner_text(".gmon"), pg.inner_text(".gmon")[:120])
     pg.screenshot(path=str(SH / "04_alc.png"))
     pg.click('#axSub [data-sub="res"]'); pg.wait_for_timeout(300); rec("ALC/ALCPT: tabla de promedios", "nov 2026" in nrm(pg.inner_text("#axBody")), pg.inner_text("#axBody")[:200])
-    pg.click('#axSub [data-sub="plan"]'); pg.wait_for_timeout(200); rec("Plan de libros visible", "16-17" in pg.inner_text("#axBody"))
+    pg.click('#axSub [data-sub="plan"]'); pg.wait_for_timeout(200); rec("Plan de libros visible", "16 y 17" in pg.inner_text("#axBody"))
     # 5. Remedial
     tab(pg, "rem"); pg.click('#rxSub [data-sub="cand"]'); pg.wait_for_timeout(300)
     cands = pg.locator("[data-cand]").count(); rec("Remedial: candidatos por escala", cands >= 1, cands)

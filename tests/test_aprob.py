@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pruebas v1.2-v1.3: mínimo y ponderación ALCPT por año (datos SINTÉTICOS, nombres inventados)."""
+"""Pruebas v1.2-v1.4 (tabla manuscrita: 1/er. 25, 2/o. 31, 3/er. 45, 4/o. 55): mínimo y ponderación ALCPT por año (datos SINTÉTICOS, nombres inventados)."""
 import json, os, time
 from pathlib import Path
 from playwright.sync_api import sync_playwright
@@ -16,12 +16,12 @@ def cad(n, a, g, alcpt=(), diag=None, **k):
     o.update(k); return o
 REM = lambda p: {"rem": {"on": True, "grupo": "R4-G1", "docente": "Docente Ficticio", "alta": "2026-09-26", "motivo": "Diagnóstico", "puntaje": p, "estatus": "curso", "reeval": [], "avances": []}, "remHist": [{"alta": "2026-09-26", "motivo": "Diagnóstico", "puntaje": p, "estatus": "curso"}]}
 A = {
- "s-4a": cad("Prueba Cuatro Alfa", "4", "1", [("Feb 2025", 20), ("Jul 2026", 35)], 44, **REM(44)),             # diag (4/o., 55) no aprob.; feb 2025 = 2/o. (45) no aprob.; jul 2026 = 3/er. (31) aprob.
+ "s-4a": cad("Prueba Cuatro Alfa", "4", "1", [("Feb 2025", 20), ("Jul 2026", 35)], 44, **REM(44)),             # diag (4/o., 55) no aprob.; feb 2025 = 2/o. (31) no aprob.; jul 2026 = 3/er. (45) no aprob.
  "s-4b": cad("Prueba Cuatro Beta", "4", "1", [("Jul 2026", 28)], 58),                                           # diag 58 aprob., calif. 8.0: monitor; jul 2026 no aprob.
  "s-4c": cad("Prueba Cuatro Gama", "4", "2", [("Jul 2026", 40), ("Nov 2026", 56)], 40, **REM(40)),             # sale del remedial con 56 (mín. 55)
  "s-3a": cad("Prueba Tres Alfa", "3", "1", [("Jul 2026", 50)], 30, **REM(30)),                                  # jul 2026 = 2/o. año (45) aprob.
- "s-3b": cad("Prueba Tres Beta", "3", "1", [("Jul 2026", 60)], 45),                                             # diag aprob. (31), calif. 10: monitor
- "s-3c": cad("Prueba Tres Gama", "3", "2", [("Ene 2027", 46, "final")], 31, cal={"p1": {"e": 8, "pt": 2.5, "pa": 1}, "p2": {"e": 7, "pt": 2, "pa": 1}}),  # final 46 → 10
+ "s-3b": cad("Prueba Tres Beta", "3", "1", [("Jul 2026", 60)], 50),                                             # diag aprob. (31), calif. 10: monitor
+ "s-3c": cad("Prueba Tres Gama", "3", "2", [("Ene 2027", 50, "final")], 31, cal={"p1": {"e": 8, "pt": 2.5, "pa": 1}, "p2": {"e": 7, "pt": 2, "pa": 1}}),  # final 46 → 10
  "s-3d": cad("Prueba Tres Delta", "3", "2", [("Ene 2027", 25, "final")], 29),                                   # final por debajo: extraordinario; candidato
  "s-2a": cad("Prueba Dos Alfa", "2", "1", [("Jul 2026", 27)]),                                                  # jul 2026 = 1/er. año: sin mínimo
  "s-2b": cad("Prueba Dos Beta", "2", "1", [("Nov 2026", 47)]),                                                  # 2/o. año (45) aprob., calif. 7
@@ -29,6 +29,7 @@ A = {
 }
 DATA = {"formato": "ingles-seguimiento-eme-respaldo", "version": "1.1", "cfg": {"sesiones": ["2026-09-26"], "minimo": 6, "riesgo": 2, "ciclo": "2026-2027", "semestre": "1", "minPreset": "oficial", "minSem": {"4": {"1": 99, "2": 99}}, "minAlcpt": {"3": 99, "4": 99}, "min12": True, "sem2Ini": 3}, "alumnos": A, "importaciones": {}}
 FJ = DL / "sintetico_aprob.json"; FJ.write_text(json.dumps(DATA, ensure_ascii=False))
+def P_cal(r): return r.get('l2acal') == 7
 def tab(pg, v): pg.click(f'nav.tabs button[data-v="{v}"]'); pg.wait_for_timeout(350)
 def download(pg, fn):
     with pg.expect_download(timeout=30000) as d: fn()
@@ -50,28 +51,28 @@ with sync_playwright() as p:
     rec("Carga del respaldo sintético", pg.evaluate("S.items.size") == len(A))
     # 1. migración: la configuración vieja (presets) no revive
     mg = pg.evaluate("(()=>{ReplicaIng.ap.C('apTabla');return {old:['minPreset','minSem','minAlcpt','min12','sem2Ini'].filter(k=>k in S.cfg),v:S.cfg.apVer,m4:ReplicaIng.ap.minFor('4').min,m3:ReplicaIng.ap.minFor('3').min}})()")
-    rec("Migración: se borran presets anteriores y queda la tabla única", mg["old"] == [] and mg["v"] == 2 and mg["m4"] == 55 and mg["m3"] == 31, mg)
+    rec("Migración: se borran presets anteriores y queda la tabla única", mg["old"] == [] and mg["v"] == 3 and mg["m4"] == 55 and mg["m3"] == 45, mg)
     # 2. lógica
     r = pg.evaluate("""(()=>{const P=ReplicaIng.ap,g=id=>S.items.get(id);const x=(o,l)=>{const h=o.alcpt.find(y=>y[0]===l);return P.res(o,h[1],l)};return {
       d4a:P.diagRes(g('s-4a')).st, d4b:P.diagRes(g('s-4b')), d3a:P.diagRes(g('s-3a')).st, d3b:P.diagRes(g('s-3b')).st,
-      j4a:x(g('s-4a'),'Jul 2026'), f4a:x(g('s-4a'),'Feb 2025'), j3a:x(g('s-3a'),'Jul 2026'), l2a:P.lastRes(g('s-2a')).st, l2b:P.lastRes(g('s-2b')), l1a:P.lastRes(g('s-1a')).st,
+      j4a:x(g('s-4a'),'Jul 2026'), f4a:x(g('s-4a'),'Feb 2025'), j3a:x(g('s-3a'),'Jul 2026'), l2a:P.lastRes(g('s-2a')).st, l2acal:P.lastRes(g('s-2a')).cal, l2b:P.lastRes(g('s-2b')), l1a:P.lastRes(g('s-1a')).st,
       mon4b:P.monitor(g('s-4b')), mon3a:P.monitor(g('s-3a')), mon4a:P.monitor(g('s-4a')), sal4c:!!P.salida(g('s-4c')), sal4a:!!P.salida(g('s-4a')),
       cf3c:P.calFinal(g('s-3c')), cf3d:P.calFinal(g('s-3d')).st,
-      cv:[P.conv('2',52),P.conv('2',45),P.conv('2',44),P.conv('3',40),P.conv('3',31),P.conv('3',30),P.conv('4',70),P.conv('4',56),P.conv('4',54),P.conv('1',50)]}})()""")
+      cv:[P.conv('2',40),P.conv('2',31),P.conv('2',30),P.conv('3',52),P.conv('3',45),P.conv('3',44),P.conv('4',70),P.conv('4',56),P.conv('4',54),P.conv('1',30),P.conv('1',25),P.conv('1',24)]}})()""")
     rec("4/o.: mínimo 55 (diag 44 no aprob., 58 aprob. con calificación 8)", r["d4a"] == "na" and r["d4b"]["st"] == "ap" and r["d4b"]["cal"] == 8, r)
-    rec("3/er.: mínimo 31 (diag 30 no aprob., 45 aprob.)", r["d3a"] == "na" and r["d3b"] == "ap", r)
-    rec("Jul 2026 de un 4/o. se califica como 3/er. año (mín. 31)", r["j4a"]["st"] == "ap" and r["j4a"]["a"] == "3" and r["j4a"]["min"] == 31, r["j4a"])
-    rec("2/o. año: mínimo 45 (feb 2025 de un 4/o. con 20 y jul 2026 de un 3/er. con 50)", r["f4a"]["st"] == "na" and r["f4a"]["min"] == 45 and r["j3a"]["st"] == "ap" and r["l2b"]["st"] == "ap" and r["l2b"]["cal"] == 7, r)
-    rec("1/er. año: sin mínimo", r["l2a"] == "sin" and r["l1a"] == "sin", r)
-    rec("Ponderación: 2/o. 52→10, 45→6, 44→—; 3/er. 40→10, 31→6, 30→—; 4/o. 70→10, 56→6.5, 54→—; 1/er. sin tabla", r["cv"] == [10, 6, None, 10, 6, None, 10, 6.5, None, None], r["cv"])
+    rec("3/er.: mínimo 45 (diag 30 no aprob., 50 aprob.)", r["d3a"] == "na" and r["d3b"] == "ap", r)
+    rec("Jul 2026 de un 4/o. se califica como 3/er. año (mín. 45; 35 no aprob.)", r["j4a"]["st"] == "na" and r["j4a"]["a"] == "3" and r["j4a"]["min"] == 45, r["j4a"])
+    rec("2/o. año: mínimo 31 (feb 2025 de un 4/o. con 20 no aprob.; jul 2026 de un 3/er. con 50 aprob.; 47 = 10)", r["f4a"]["st"] == "na" and r["f4a"]["min"] == 31 and r["j3a"]["st"] == "ap" and r["l2b"]["st"] == "ap" and r["l2b"]["cal"] == 10, r)
+    rec("1/er. año: mínimo 25 (jul 2026 de un 2/o. con 27 aprob., calif. 7)", r["l2a"] == "ap" and r["l1a"] == "ap" and P_cal(r), r)
+    rec("Ponderación: 2/o. 40→10, 31→6, 30→—; 3/er. 52→10, 45→6, 44→—; 4/o. 70→10, 56→6.5, 54→—; 1/er. 30→10, 25→6, 24→—", r["cv"] == [10, 6, None, 10, 6, None, 10, 6.5, None, 10, 6, None], r["cv"])
     rec("Monitor: calificación diagnóstica mayor a 7", r["mon4b"] is True and r["mon3a"] is False and r["mon4a"] is False, r)
     rec("Remedial: puede salir quien alcanza el mínimo después del alta", r["sal4c"] is True and r["sal4a"] is False, r)
     rec("Calificación final 60/40 con ALCPT final ponderado", abs(r["cf3c"]["v"] - round((7.75 * 60 + 10 * 40) / 100, 2)) < 0.01 and r["cf3c"]["st"] == "ap", r["cf3c"])
     rec("ALCPT final por debajo del mínimo: extraordinario", r["cf3d"] == "extra", r["cf3d"])
     # 3. Ajustes: tabla simple
-    tab(pg, "cfg"); v = pg.evaluate("(()=>{const t=document.querySelector('#xAp');const sec=t.closest('.tscroll');let txt='';let n=sec.previousElementSibling;txt+=n?n.innerText:'';let k=sec.nextElementSibling;for(let i=0;i<3&&k;i++){txt+=' '+k.innerText;k=k.nextElementSibling};return {h:[...t.querySelectorAll('thead th')].map(x=>x.textContent),min:[...t.querySelectorAll('[data-k=min]')].map(i=>i.value),c4:t.querySelector('[data-k=conv][data-a=\"4\"]').value,c2:t.querySelector('[data-k=conv][data-a=\"2\"]').value,pre:!!document.querySelector('#xPre,#xMin12,#xS2i,#xS2f'),txt}})()")
+    tab(pg, "cfg"); v = pg.evaluate("(()=>{const t=document.querySelector('#xAp');const sec=t.closest('.tscroll');let txt='';let n=sec.previousElementSibling;txt+=n?n.innerText:'';let k=sec.nextElementSibling;for(let i=0;i<3&&k;i++){txt+=' '+k.innerText;k=k.nextElementSibling};return {h:[...t.querySelectorAll('thead th')].map(x=>x.textContent),min:[...t.querySelectorAll('[data-k=min]')].map(i=>i.value),c4:t.querySelector('[data-k=conv][data-a=\"4\"]').value,c2:t.querySelector('[data-k=conv][data-a=\"2\"]').value,c1:t.querySelector('[data-k=conv][data-a=\"1\"]').value,pre:!!document.querySelector('#xPre,#xMin12,#xS2i,#xS2f'),txt}})()")
     rec("Ajustes: tabla de 3 columnas Año | Mínimo | Ponderación", v["h"] == ["Año", "Mínimo", "Ponderación (puntos = calificación)"], v["h"])
-    rec("Ajustes: mínimos 1/er. vacío, 2/o. 45, 3/er. 31, 4/o. 55 y ponderaciones", v["min"] == ["", "45", "31", "55"] and v["c4"] == "60=10, 59=9, 58=8, 57=7, 56=6.5, 55=6" and v["c2"] == "50=10, 49=9, 48=8, 47=7, 46=6.5, 45=6", v)
+    rec("Ajustes: mínimos 1/er. 25, 2/o. 31, 3/er. 45, 4/o. 55 y ponderaciones", v["min"] == ["25", "31", "45", "55"] and v["c4"] == "60=10, 59=9, 58=8, 57=7, 56=6.5, 55=6" and v["c2"] == "36=10, 35=9, 34=8, 33=7, 32=6.5, 31=6" and v["c1"] == "30=10, 29=9, 28=8, 27=7, 26=6.5, 25=6", v)
     vt = pg.inner_text("#view").casefold()
     rec("Sin selector de preset ni referencias a CEI o propuesta", not v["pre"] and not any(w in vt for w in ["sac./p.c.", "c.e.i", "propuesta", "inciso", "idioma extranjero ii"]), [w for w in ["sac./p.c.", "c.e.i", "propuesta", "inciso"] if w in vt])
     sec = pg.locator("#xAp").locator("xpath=ancestor::div[contains(@class,'tscroll')]")
@@ -81,7 +82,7 @@ with sync_playwright() as p:
     pg.screenshot(path=str(SH / "ap_01_ajustes.png"), full_page=True)
     # 3. Cadetes
     tab(pg, "cad"); t = pg.inner_text("#view")
-    t = t.casefold(); rec("Cadetes: insignias de diagnóstico y ALCPT", "diag. no aprob." in t and "diag. aprob." in t and "alcpt sin mín." in t and "alcpt aprob." in t and "monitor" in t and "puede salir del remedial" in t, t[:200])
+    t = t.casefold(); rec("Cadetes: insignias de diagnóstico y ALCPT", "diag. no aprob." in t and "diag. aprob." in t and "alcpt aprob." in t and "monitor" in t and "puede salir del remedial" in t, t[:200])
     pg.screenshot(path=str(SH / "ap_02_cadetes.png"))
     # 4. ALC y ALCPT
     tab(pg, "alc"); pg.select_option("#axA", "4"); pg.wait_for_timeout(250); pg.select_option("#axL", "__diag"); pg.wait_for_timeout(300); t = pg.inner_text("#axBody")
@@ -91,8 +92,8 @@ with sync_playwright() as p:
     # 5. Panorama
     tab(pg, "pan"); t = pg.inner_text("#view"); rows = pg.evaluate("[...document.querySelectorAll('.aptab tbody tr')].map(tr=>[...tr.children].map(td=>td.innerText.trim()))")
     r4 = next((x for x in rows if x[0].startswith("4/o.")), None); r3 = next((x for x in rows if x[0].startswith("3/er.")), None)
-    rec("Panorama 4/o.: mín. 55, diag 1/2, último ALCPT 2/1, 1 monitor, 1 puede salir", r4 and r4[2] == "55" and r4[3:7] == ["1", "2", "—", "33.3%"] and r4[7:11] == ["2", "1", "—", "66.7%"] and r4[11:13] == ["1", "1"], r4)
-    rec("Panorama 3/er.: mín. 31, diag 2/2, último ALCPT 3/1, 1 monitor", r3 and r3[2] == "31" and r3[3:7] == ["2", "2", "—", "50%"] and r3[7:11] == ["3", "1", "—", "75%"] and r3[11] == "1", r3); pg.screenshot(path=str(SH / "ap_04_panorama.png"), full_page=True)
+    rec("Panorama 4/o.: mín. 55, diag 1/2, último ALCPT 1/2, 1 monitor, 1 puede salir", r4 and r4[2] == "55" and r4[3:7] == ["1", "2", "—", "33.3%"] and r4[7:11] == ["1", "2", "—", "33.3%"] and r4[11:13] == ["1", "1"], r4)
+    rec("Panorama 3/er.: mín. 45, diag 1/3, último ALCPT 3/1, 1 monitor", r3 and r3[2] == "45" and r3[3:7] == ["1", "3", "—", "25%"] and r3[7:11] == ["3", "1", "—", "75%"] and r3[11] == "1", r3); pg.screenshot(path=str(SH / "ap_04_panorama.png"), full_page=True)
     # 6. Estadística + Excel
     tab(pg, "est"); pg.fill("#esTxt", "aprobados y no aprobados del diagnóstico alcpt por año"); pg.click("#esGo"); pg.wait_for_timeout(400); t = pg.inner_text("#view")
     tl = t.casefold(); rec("Estadística: pedido en español de aprobados del diagnóstico", "aprobados" in tl and "no aprobados" in tl and "resultado alcpt" in tl, t[-400:])
@@ -102,7 +103,7 @@ with sync_playwright() as p:
     xp = download(pg, lambda: pg.click("#esXl")); wb = openpyxl.load_workbook(xp); tot, bad = fonts_ok(wb); ws = wb["Aprobación ALCPT"] if "Aprobación ALCPT" in wb.sheetnames else None
     rec("Excel de estadística: hoja Aprobación ALCPT, Noto Sans 10, celdas combinadas", ws is not None and bad == 0 and len(ws.merged_cells.ranges) >= 6, (wb.sheetnames, tot, bad))
     vals = [[c.value for c in r] for r in ws.iter_rows()] if ws else []; i4 = next((i for i, r in enumerate(vals) if r[0] == "4/o. año"), None); tot4 = next((r for r in vals[i4:] if r[1] == "Total del año"), None) if i4 is not None else None
-    rec("Excel: total 4/o. diag 1/2/0 y 33.3 %; último 2/1", tot4 and tot4[4:8] == [1, 2, 0, 33.3] and tot4[8:10] == [2, 1], tot4)
+    rec("Excel: total 4/o. diag 1/2/0 y 33.3 %; último 1/2", tot4 and tot4[4:8] == [1, 2, 0, 33.3] and tot4[8:10] == [1, 2], tot4)
     # 7. Seguimiento EME y kárdex
     tab(pg, "eme"); t = pg.inner_text("#view"); rec("Seguimiento EME: resultado del último ALCPT", "aprob." in t, t[:200])
     pg.click('[data-em="s-4a"]'); pg.wait_for_timeout(400); t = pg.inner_text("#emeBody"); rec("Kárdex en pantalla: resultado por examen", "ALCPT aprob." in t or "aprob." in t, t[:300])
@@ -127,7 +128,7 @@ with sync_playwright() as p:
     tab(pg, "cad"); pg.click('.nameb[data-id="s-3c"]'); pg.wait_for_timeout(400); t = pg.inner_text("#fichaBody")
     rec("Ficha: tabla de resultado ALCPT y calificación final", "resultado alcpt por año" in t.casefold() and "calificación final del ciclo" in t.casefold() and "8.65" in t, t[-300:]); pg.screenshot(path=str(SH / "ap_05_ficha.png")); pg.keyboard.press("Escape")
     # 12. respaldo conserva ajustes nuevos
-    tab(pg, "cfg"); jp = download(pg, lambda: pg.click("#xDl")); J = json.load(open(jp)); rec("Respaldo JSON v1.3 guarda la tabla única sin presets viejos", J["version"] == "1.3" and J["cfg"].get("apTabla", {}).get("4", {}).get("min") == 55 and "minSem" not in J["cfg"] and "minPreset" not in J["cfg"], J.get("version"))
+    tab(pg, "cfg"); jp = download(pg, lambda: pg.click("#xDl")); J = json.load(open(jp)); rec("Respaldo JSON v1.4 guarda la tabla única sin presets viejos", J["version"] == "1.4" and J["cfg"].get("apTabla", {}).get("4", {}).get("min") == 55 and "minSem" not in J["cfg"] and "minPreset" not in J["cfg"], J.get("version"))
     rec("Sin errores de consola", not ERR, ERR[:5]); ctx.close(); b.close()
 ok = sum(r["ok"] for r in R); print(f"\n{ok}/{len(R)} pruebas correctas")
 json.dump({"fecha": time.strftime("%Y-%m-%d %H:%M"), "correctas": ok, "total": len(R), "pruebas": R}, open(T / "resultado_test_aprob.json", "w"), ensure_ascii=False, indent=1)

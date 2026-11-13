@@ -10,27 +10,27 @@
   {
    "prueba": "Migración: 3/er. parcial sale de cal y queda archivado",
    "ok": true,
-   "detalle": "{'p3': False, 'arch': {'e': 2, 'pt': 0, 'pa': 0}, 'alc': ['p1'], 'alcA': 1, 'tp': [7, 8], 'tc': False, 'ta': 1, 'ver': 3, 'tipos': {'Feb 2026': 'historico', 'Oct 2026': 'seguimiento', 'Nov 2026': 'seguimiento', 'Ene 2027': 'final'}, 'orig': 'periodo', 'log': [{'at': '2026-11-13T14:47:21.106Z', 'cade"
+   "detalle": "{'p3': False, 'arch': {'e': 2, 'pt': 0, 'pa': 0}, 'alc': ['p1'], 'alcA': 1, 'tp': [7, 8], 'tc': False, 'ta': 1, 'ver': 3, 'tipos': {'Feb 2026': 'historico', 'Oct 2026': 'seguimiento', 'Nov 2026': 'seguimiento', 'Ene 2027': 'final'}, 'orig': 'periodo', 'log': [{'at': '2026-11-13T15:21:21.859Z', 'cade"
   },
   {
    "prueba": "Migración: examen ALC parcial 3 archivado, parcial 1 conservado",
    "ok": true,
-   "detalle": "{'p3': False, 'arch': {'e': 2, 'pt': 0, 'pa': 0}, 'alc': ['p1'], 'alcA': 1, 'tp': [7, 8], 'tc': False, 'ta': 1, 'ver': 3, 'tipos': {'Feb 2026': 'historico', 'Oct 2026': 'seguimiento', 'Nov 2026': 'seguimiento', 'Ene 2027': 'final'}, 'orig': 'periodo', 'log': [{'at': '2026-11-13T14:47:21.106Z', 'cade"
+   "detalle": "{'p3': False, 'arch': {'e': 2, 'pt': 0, 'pa': 0}, 'alc': ['p1'], 'alcA': 1, 'tp': [7, 8], 'tc': False, 'ta': 1, 'ver': 3, 'tipos': {'Feb 2026': 'historico', 'Oct 2026': 'seguimiento', 'Nov 2026': 'seguimiento', 'Ene 2027': 'final'}, 'orig': 'periodo', 'log': [{'at': '2026-11-13T15:21:21.859Z', 'cade"
   },
   {
    "prueba": "Migración: trayectoria con 3 parciales queda en 2 y el tercero archivado",
    "ok": true,
-   "detalle": "{'p3': False, 'arch': {'e': 2, 'pt': 0, 'pa': 0}, 'alc': ['p1'], 'alcA': 1, 'tp': [7, 8], 'tc': False, 'ta': 1, 'ver': 3, 'tipos': {'Feb 2026': 'historico', 'Oct 2026': 'seguimiento', 'Nov 2026': 'seguimiento', 'Ene 2027': 'final'}, 'orig': 'periodo', 'log': [{'at': '2026-11-13T14:47:21.106Z', 'cade"
+   "detalle": "{'p3': False, 'arch': {'e': 2, 'pt': 0, 'pa': 0}, 'alc': ['p1'], 'alcA': 1, 'tp': [7, 8], 'tc': False, 'ta': 1, 'ver': 3, 'tipos': {'Feb 2026': 'historico', 'Oct 2026': 'seguimiento', 'Nov 2026': 'seguimiento', 'Ene 2027': 'final'}, 'orig': 'periodo', 'log': [{'at': '2026-11-13T15:21:21.859Z', 'cade"
   },
   {
    "prueba": "Migración: tipos ALCPT (ciclo actual → seguimiento, anterior → ciclo anterior, final se respeta)",
    "ok": true,
-   "detalle": "{'p3': False, 'arch': {'e': 2, 'pt': 0, 'pa': 0}, 'alc': ['p1'], 'alcA': 1, 'tp': [7, 8], 'tc': False, 'ta': 1, 'ver': 3, 'tipos': {'Feb 2026': 'historico', 'Oct 2026': 'seguimiento', 'Nov 2026': 'seguimiento', 'Ene 2027': 'final'}, 'orig': 'periodo', 'log': [{'at': '2026-11-13T14:47:21.106Z', 'cade"
+   "detalle": "{'p3': False, 'arch': {'e': 2, 'pt': 0, 'pa': 0}, 'alc': ['p1'], 'alcA': 1, 'tp': [7, 8], 'tc': False, 'ta': 1, 'ver': 3, 'tipos': {'Feb 2026': 'historico', 'Oct 2026': 'seguimiento', 'Nov 2026': 'seguimiento', 'Ene 2027': 'final'}, 'orig': 'periodo', 'log': [{'at': '2026-11-13T15:21:21.859Z', 'cade"
   },
   {
    "prueba": "Migración: bitácora con conteo y nombres archivados",
    "ok": true,
-   "detalle": "{'at': '2026-11-13T14:47:21.106Z', 'cadetes': 6, 'p3': 1, 'alcP3': 1, 'trayP3': 1, 'seguimiento': 2, 'cicloAnterior': 1, 'archivados': ['Ficticia Cuatro Alfa']}"
+   "detalle": "{'at': '2026-11-13T15:21:21.859Z', 'cadetes': 6, 'p3': 1, 'alcP3': 1, 'trayP3': 1, 'seguimiento': 2, 'cicloAnterior': 1, 'archivados': ['Ficticia Cuatro Alfa']}"
   },
   {
    "prueba": "Ajustes: aviso de 3/er. parcial archivado y tabla simple sin CEI/propuesta",
@@ -85,12 +85,12 @@
   {
    "prueba": "Avance: el ciclo anterior no entra",
    "ok": true,
-   "detalle": "{'pasos': [['Diagnóstico', 40, None, 'na'], ['Seguimiento 1', 45, 5, 'na'], ['Seguimiento 2', 56, 16, 'ap'], ['Final', 58, 18, 'ap']], 'ult': 56, 's4a': {'f': 'seguimiento ALCPT Nov 2026', 'v': 56, 'min': 55}, 's4b': None, 's4c': None, 's3a': {'f': 'seguimiento ALCPT Nov 2026', 'v': 33, 'min': 31}, "
+   "detalle": "{'pasos': [['Diagnóstico', 40, None, 'na'], ['Seguimiento 1', 45, 5, 'na'], ['Seguimiento 2', 56, 16, 'ap'], ['Final', 58, 18, 'ap']], 'ult': 56, 's4a': {'f': 'seguimiento ALCPT Nov 2026', 'v': 56, 'min': 55}, 's4b': None, 's4c': None, 's3a': {'f': 'seguimiento ALCPT Nov 2026', 'v': 46, 'min': 45}, "
   },
   {
    "prueba": "Salida del remedial: seguimiento posterior al alta alcanza el mínimo (primera vez)",
    "ok": true,
-   "detalle": "[{'f': 'seguimiento ALCPT Nov 2026', 'v': 56, 'min': 55}, {'f': 'seguimiento ALCPT Nov 2026', 'v': 33, 'min': 31}, None]"
+   "detalle": "[{'f': 'seguimiento ALCPT Nov 2026', 'v': 56, 'min': 55}, {'f': 'seguimiento ALCPT Nov 2026', 'v': 46, 'min': 45}, None]"
   },
   {
    "prueba": "Salida del remedial: seguimiento anterior al alta no cuenta",
@@ -130,12 +130,12 @@
   {
    "prueba": "Kárdex .xlsx: avance (diagnóstico → seguimientos → final), tipos, Noto Sans 10 y celdas combinadas",
    "ok": true,
-   "detalle": "(96, 0, 39)"
+   "detalle": "(97, 0, 39)"
   },
   {
    "prueba": "Panorama: tarjeta de avance del remedial",
    "ok": true,
-   "detalle": "Avance del seguimientoDiagnóstico (rectoría) contra el último ALCPT de seguimiento (Directora).\n  En el remedial4Con seguimiento4/4\n  Diagnóstico → último seguimiento37 → 49.8 (+12.8 pts)\n  Mejoraron4/4Ya alcanzan el mínimo3 (75%)\n  Pueden salir del remedial2\n  AñoEn remedialCon seguimientoProm. dia"
+   "detalle": "Avance del seguimientoDiagnóstico (rectoría) contra el último ALCPT de seguimiento (Directora).\n  En el remedial4Con seguimiento4/4\n  Diagnóstico → último seguimiento37 → 53 (+16 pts)\n  Mejoraron4/4Ya alcanzan el mínimo3 (75%)\n  Pueden salir del remedial2\n  AñoEn remedialCon seguimientoProm. diagnós"
   },
   {
    "prueba": "Estadística: 'avance del seguimiento por grupo' se entiende",
@@ -173,9 +173,9 @@
    "detalle": "7.88"
   },
   {
-   "prueba": "Respaldo JSON v1.3 conserva lo archivado",
+   "prueba": "Respaldo JSON v1.4 conserva lo archivado",
    "ok": true,
-   "detalle": "1.3"
+   "detalle": "1.4"
   },
   {
    "prueba": "Persistencia: tras recargar no se vuelve a migrar",

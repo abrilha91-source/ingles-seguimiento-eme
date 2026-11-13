@@ -1,4 +1,4 @@
-# Seguimiento de inglés · réplica v1.3
+# Seguimiento de inglés · réplica v1.4
 
 Aplicación web (PWA) para llevar el seguimiento de la asignatura de inglés de la Escuela Militar de Enfermería: calificaciones parciales, ALCPT, ALC por libro, curso remedial sabatino, estadística y el seguimiento de cada cadete durante toda su estancia en la EME (1/o. a 4/o. año).
 
@@ -18,6 +18,12 @@ Funciona en el navegador, sin servidor y sin conexión una vez abierta. **Se pub
 | Ajustes | Ciclo y semestre, escalas de color ALCPT/ALC, plan de libros, respaldo JSON, lista de cadetes, concentrado, cierre de ciclo y borrado. |
 
 Los documentos de Excel se generan en Noto Sans 10 y combinan las celdas que comparten información.
+
+## Tabla ALCPT y referencia del parcial ALC (v1.4)
+- ALCPT (Ajustes → «ALCPT: puntaje mínimo aprobatorio por año», Año | Mínimo | Ponderación): 1/er. 25 (30 o más=10, 29=9, 28=8, 27=7, 26=6.5, 25=6); 2/o. 31 (36 o más=10 … 31=6); 3/er. 45 (50 o más=10 … 45=6); 4/o. 55 (60 o más=10 … 55=6). Cada examen se califica con el año que cursaba el cadete al presentarlo.
+- Migración: los valores por omisión de v1.2/v1.3 se sustituyen; un valor editado a mano se conserva y Ajustes lo señala (botones «Usar los valores por omisión» / «Conservar los míos»).
+- ALC parcial (Ajustes → «ALC parcial: libros y puntaje de referencia por semestre», Semestre | Año y semestre | Libros | Puntaje de referencia): 1) 1/er. año 2/o. sem., libros 4 y 5, 29-30 (umbral 29); 2) 2/o. 1/er., 6 y 7, 30; 3) 2/o. 2/o., 8 y 9, 41; 4) 3/er. 1/er., 10 y 11, 45; 5) 3/er. 2/o., 12 y 13, 53; 6) 4/o. 1/er., 14 y 15, 55; 7) 4/o. 2/o., 16 y 17, 61. 1/er. año 1/er. semestre: no se imparte. Carga horaria 549 h, 78 h por semestre, 39 h por libro.
+- Cada parcial ALC muestra Alcanza / No alcanza la referencia de su semestre (ALC y ALCPT, ficha, Seguimiento EME y kárdex, Estadística «ALC parcial: referencia del semestre», concentrado). La calificación del parcial no cambia (examen 60 % + portafolio 30 % + participación 10 %); no hay conversión de puntos ALC a calificación.
 
 ## Calificaciones y tipos de ALCPT (v1.3)
 - Programa: **2 parciales ALC** (cada uno: examen × 0.6 + portafolio 0–3 + participación 0–1) y **A.L.C.P.T. final**.
@@ -54,4 +60,4 @@ Los nombres se guardan tal como vienen en la lista oficial.
 - La transcripción de audio descarga el modelo la primera vez (requiere conexión esa vez).
 
 ## Pruebas
-`tests/test_ingles.py`, `tests/test_aprob.py` y `tests/test_v13.py` (Playwright) usan solo datos sintéticos.
+`tests/test_ingles.py`, `tests/test_aprob.py`, `tests/test_v13.py` y `tests/test_v14.py` (Playwright) usan solo datos sintéticos.

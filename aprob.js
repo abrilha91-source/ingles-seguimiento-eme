@@ -1,25 +1,36 @@
-/* Seguimiento de inglés v1.3 · Aprobación ALCPT por año, tipos de ALCPT y avance del seguimiento.
+/* Seguimiento de inglés v1.4 · Aprobación ALCPT por año, tipos de ALCPT y avance del seguimiento.
    Tipos: Diagnóstico (orden de rectoría; define el ingreso al remedial; no cuenta para la calificación),
    Seguimiento (orden de la Directora; cualquier número, con fecha; no cuenta; mide el avance y la salida del remedial),
    Final (cuenta 40 %). Calificación: 2 parciales ALC (examen 60 + portafolio 30 + participación 10) × 60 % + A.L.C.P.T. final × 40 %.
    Un mínimo y una tabla de ponderación (puntos = calificación) por año, editables en Ajustes:
-   1/er. sin mínimo; 2/o. 45 (50 o más=10 … 45=6.0); 3/er. 31 (36 o más=10 … 31=6); 4/o. 55 (60 o más=10 … 55=6).
+   1/er. 25 (30 o más=10 … 25=6); 2/o. 31 (36 o más=10 … 31=6); 3/er. 45 (50 o más=10 … 45=6); 4/o. 55 (60 o más=10 … 55=6).
    Por debajo del mínimo = No aprobado. */
 (function (G) {
 "use strict";
 const RI = () => G.ReplicaIng;
 const DEFAP = {
   apTabla: {
-    "1": { min: null, conv: [] },
-    "2": { min: 45, conv: [[50, 10], [49, 9], [48, 8], [47, 7], [46, 6.5], [45, 6]] },
-    "3": { min: 31, conv: [[36, 10], [35, 9], [34, 8], [33, 7], [32, 6.5], [31, 6]] },
+    "1": { min: 25, conv: [[30, 10], [29, 9], [28, 8], [27, 7], [26, 6.5], [25, 6]] },
+    "2": { min: 31, conv: [[36, 10], [35, 9], [34, 8], [33, 7], [32, 6.5], [31, 6]] },
+    "3": { min: 45, conv: [[50, 10], [49, 9], [48, 8], [47, 7], [46, 6.5], [45, 6]] },
     "4": { min: 55, conv: [[60, 10], [59, 9], [58, 8], [57, 7], [56, 6.5], [55, 6]] }
   },
   aprobBase: "examen", pesoParc: 60, pesoAlcpt: 40, monitorUmbral: 7
 };
 /* claves de versiones anteriores que ya no se usan (no deben revivir) */
 const OLD = ["minPreset", "minSem", "minAlcpt", "convAlcpt", "min12", "min12v", "conv12", "refAlcpt", "sem2Ini", "sem2Fin"];
-function mig() { if (!S.cfg || S.cfg.apVer === 2) return; OLD.forEach(k => delete S.cfg[k]); S.cfg.apTabla = JSON.parse(JSON.stringify(DEFAP.apTabla)); S.cfg.apVer = 2; }
+/* v1.4: valores por omisión de v1.2/v1.3 que se sustituyen; lo editado a mano se conserva y se señala */
+const DEF13 = { "1": { min: null, conv: [] }, "2": { min: 45, conv: [[50, 10], [49, 9], [48, 8], [47, 7], [46, 6.5], [45, 6]] }, "3": { min: 31, conv: [[36, 10], [35, 9], [34, 8], [33, 7], [32, 6.5], [31, 6]] }, "4": { min: 55, conv: [[60, 10], [59, 9], [58, 8], [57, 7], [56, 6.5], [55, 6]] } };
+const filaEq = (x, y) => { x = x || {}; y = y || {}; const cv = t => JSON.stringify((t || []).map(([p, c]) => [+p, +c]).sort((a, b) => b[0] - a[0])); return (x.min == null ? null : +x.min) === (y.min == null ? null : +y.min) && cv(x.conv) === cv(y.conv); };
+const AP_VER = 3; let migCambio = false;
+function mig() { if (!S.cfg || S.cfg.apVer === AP_VER) return;
+  const D = JSON.parse(JSON.stringify(DEFAP.apTabla));
+  if (S.cfg.apVer !== 2 || !S.cfg.apTabla) { OLD.forEach(k => delete S.cfg[k]); S.cfg.apTabla = D; S.cfg.apFlag = []; }
+  else { const T = { ...S.cfg.apTabla }, flag = [];
+    ["1", "2", "3", "4"].forEach(a => { if (!T[a] || filaEq(T[a], DEF13[a])) T[a] = D[a]; else if (!filaEq(T[a], D[a])) flag.push({ a, min: T[a].min ?? null, conv: T[a].conv || [] }); });
+    S.cfg.apTabla = T; S.cfg.apFlag = flag; }
+  S.cfg.apVer = AP_VER; migCambio = true; }
+function migCfgPend() { const c = migCambio; migCambio = false; return c; }
 const C = k => { mig(); return S.cfg && S.cfg[k] != null ? S.cfg[k] : DEFAP[k]; };
 const nv = v => (v === "" || v == null || isNaN(Number(v)) ? null : Number(v));
 const MESL = { ene: 0, feb: 1, mar: 2, abr: 3, may: 4, jun: 5, jul: 6, ago: 7, sep: 8, oct: 9, nov: 10, dic: 11, jan: 0, apr: 3, aug: 7, dec: 11 };
@@ -117,6 +128,30 @@ function resumen(L) { const out = []; ["1", "2", "3", "4"].forEach(a => { const 
 const pct = (ap, na) => (ap + na ? Math.round(ap * 1000 / (ap + na)) / 10 : null);
 G.ReplicaIng.ap = { TIPOS, TIPO_TXT, tipoOf, inCur, progreso, progSvg, progresoHTML, progCnt, pasoTxt, fmtF, migItem: o => migItem(o), DEFAP, C, mig, yearAt, minTxt, minFor, conv, res, txt, TXT, badge, chip, lastRes, diagRes, monitor, salida, calFinal, finalAlcpt, resumen, pct, labDate };
 
+/* ---------- ALC parcial: libros y puntaje de referencia por semestre (no aplica al ALCPT) ---------- */
+const DEFREF = [{ a: "1", sem: "2", libros: "4-5", ref: "29-30" }, { a: "2", sem: "1", libros: "6-7", ref: "30" }, { a: "2", sem: "2", libros: "8-9", ref: "41" }, { a: "3", sem: "1", libros: "10-11", ref: "45" }, { a: "3", sem: "2", libros: "12-13", ref: "53" }, { a: "4", sem: "1", libros: "14-15", ref: "55" }, { a: "4", sem: "2", libros: "16-17", ref: "61" }];
+function planRef() { const P = (RI() && RI().cfg("planAlc")) || []; return DEFREF.map((d, i) => { const p = P.find(x => x.a === d.a && x.sem === d.sem) || {}; return { n: i + 1, a: d.a, sem: d.sem, libros: p.libros || d.libros, ref: p.ref !== undefined ? String(p.ref) : d.ref }; }); }
+const refRow = (a, sem) => planRef().find(x => x.a === String(a) && x.sem === String(sem)) || null;
+const refThr = ref => { const m = String(ref || "").match(/\d+(?:[.,]\d+)?/); return m ? +m[0].replace(",", ".") : null; };
+const librosTxt = l => String(l || "").replace(/\s*[-–]\s*/g, " y ");
+/* resultado de un examen ALC: si = alcanza, no = no alcanza, noimp = no se imparte, np = no es parcial, sin = sin referencia, nd = sin puntaje */
+function alcRef(o, x) { const a = String((x && x.a) || o.a), sem = String((x && x.sem) || RI().cfg("semestre")), v = nv(x && x.pts);
+  if (a === "1" && sem === "1") return { st: "noimp", v };
+  const row = refRow(a, sem); if (!/^p[12]$/.test((x && x.tipo) || "")) return { st: "np", v, row };
+  if (!row) return { st: "noimp", v }; const t = refThr(row.ref);
+  return { st: v == null ? "nd" : t == null ? "sin" : v >= t ? "si" : "no", v, row, thr: t, x }; }
+const ALC_TXT = { si: "Alcanza", no: "No alcanza", noimp: "No se imparte", sin: "Sin referencia", np: "", nd: "" };
+function alcTxt(r) { return !r || !ALC_TXT[r.st] ? "" : ALC_TXT[r.st] + (r.row && /^(si|no)$/.test(r.st) ? ` (ref. ${r.row.ref})` : ""); }
+function alcChip(r) { if (!r || r.st === "nd" || r.st === "np") return "—"; const cls = r.st === "si" ? "ap-ok" : r.st === "no" ? "ap-no" : "ap-sin";
+  return `<span class="apres ${cls}">${esc(ALC_TXT[r.st])}</span>${r.row ? `<span class="sub">ref. ${esc(r.row.ref)} · semestre ${r.row.n} · libros ${esc(librosTxt(r.row.libros))}</span>` : ""}`; }
+function alcBadge(r) { if (!r || !/^(si|no)$/.test(r.st)) return ""; return `<span class="badge ${r.st === "si" ? "b-out" : "b-bad"} b-ap" title="Referencia ${esc(r.row.ref)} · semestre ${r.row.n}">${r.st === "si" ? "alcanza" : "no alcanza"}</span>`; }
+/* último parcial ALC del ciclo actual (orden: semestre, parcial) */
+function lastAlcPar(o) { const c = curCiclo(); const L = (o.alc || []).filter(x => /^p[12]$/.test(x.tipo) && (x.ciclo || c) === c && nv(x.pts) != null)
+    .sort((p, q) => String(p.sem || "").localeCompare(String(q.sem || "")) || String(p.fecha || "").localeCompare(String(q.fecha || "")) || p.tipo.localeCompare(q.tipo));
+  const x = L[L.length - 1]; return x ? alcRef(o, x) : null; }
+function alcParList(o) { const c = curCiclo(); return (o.alc || []).filter(x => /^p[12]$/.test(x.tipo) && (x.ciclo || c) === c).map(x => ({ x, r: alcRef(o, x) })); }
+Object.assign(G.ReplicaIng.ap, { DEFREF, planRef, refRow, refThr, librosTxt, alcRef, alcTxt, alcChip, alcBadge, lastAlcPar, alcParList, ALC_TXT });
+
 /* ---------- migración de datos a v1.3 (2 parciales, tipos ALCPT) ---------- */
 const DATA_VER = 3;
 function migItem(o) { if (!o || o.dataVer === DATA_VER) return null; const x = clone(o), n = { p3: 0, alcp3: 0, trayp3: 0, seg: 0, hist: 0 }, hoyS = new Date().toISOString().slice(0, 10);
@@ -139,7 +174,7 @@ function migrarTodo() { if (!S.items || !S.items.size) return null; const out = 
   if (S.db && S.db._bulk) S.db._bulk([...out, { col: "ajustes", id: "general", data: { ...S.cfg } }]).catch(e => console.warn(e));
   return log; }
 const _render = G.render;
-G.render = function () { let log = null; try { log = migrarTodo(); } catch (e) { console.warn(e); } _render();
+G.render = function () { let log = null; try { if (S.cfg) C("apTabla"); log = migrarTodo(); if (migCfgPend() && !log && S.loaded && S.items && S.items.size && S.db && S.db._bulk) S.db._bulk([{ col: "ajustes", id: "general", data: { ...S.cfg } }]).catch(e => console.warn(e)); } catch (e) { console.warn(e); } _render();
   if (log && (log.p3 || log.alcP3 || log.trayP3)) toast(`Datos actualizados a 2 parciales: ${log.p3 + log.alcP3 + log.trayP3} registro(s) de 3/er. parcial archivados (${log.archivados.length} cadete(s)); consulta Ajustes.`); };
 G.ReplicaIng.ap.migrarTodo = migrarTodo;
 
@@ -188,6 +223,10 @@ G.openFicha = function (id) { _openFicha(id); const o = S.items.get(id); if (!o 
   <span class="hint">${sal ? `Alcanzó ${sal.v} pts (mín. ${sal.min}) en ${esc(sal.f || "")}: puede darse de baja del remedial.` : ""}</span></div>
   <p class="hint">Calificación final del ciclo (parciales ${C("pesoParc")} % + A.L.C.P.T. final ${C("pesoAlcpt")} %): ${cf.st === "pend" ? "pendiente" + (cf.f ? "" : " del A.L.C.P.T. final") : cf.st === "extra" ? `A.L.C.P.T. final ${cf.f.v} pts, por debajo de ${cf.r.min}: examen extraordinario` : `<b>${cf.v.toFixed(2)}</b> · ${cf.st === "ap" ? "aprobado" : "no aprobado"}`}.</p>`;
   if (next) next.insertAdjacentHTML("beforebegin", html); else $("#fichaBody").insertAdjacentHTML("beforeend", html);
+  const AL = alcParList(o), hs2 = [...document.querySelectorAll("#fichaBody h3")], ev = hs2.find(h => /Evidencias/.test(h.textContent));
+  const ah = `<h3>ALC parcial: referencia del semestre</h3>${AL.length ? `<div class="tscroll"><table class="tbl" id="fAlcRef" style="min-width:520px"><thead><tr><th>Libro</th><th>Examen</th><th>Semestre</th><th class="num">Puntos</th><th>Referencia</th></tr></thead><tbody>
+    ${AL.map(({ x, r }) => `<tr><td>Libro ${esc(x.libro)}</td><td>${x.tipo === "p1" ? "Parcial 1" : "Parcial 2"}</td><td>${r.row ? `${r.row.n} · ${ANIO[r.row.a]} año ${r.row.sem === "1" ? "1/er." : "2/o."} sem. · libros ${esc(librosTxt(r.row.libros))}` : "—"}</td><td class="num">${r.v ?? "—"}</td><td>${alcChip(r)}</td></tr>`).join("")}</tbody></table></div>` : `<p class="hint">Sin exámenes parciales ALC en el ciclo.</p>`}`;
+  if (ev) ev.insertAdjacentHTML("beforebegin", ah); else $("#fichaBody").insertAdjacentHTML("beforeend", ah);
   const s = $("#fMon"); if (s) s.onchange = () => { const x = clone(S.items.get(id)); if (s.value === "si") x.monitor = true; else if (s.value === "no") x.monitor = false; else delete x.monitor; saveItem(x, true); toast("Monitor actualizado"); };
   } catch (e) { console.warn(e); } };
 
@@ -205,10 +244,16 @@ G.vCfg = function () { _vCfg(); const T = C("apTabla"); const anchor = [...VW.qu
   <label class="hint">Promedio de los 2 parciales ALC en la calificación final (%)<input type="number" id="xPp" min="0" max="100" value="${C("pesoParc")}"></label><label class="hint">A.L.C.P.T. final convertido (%)<input type="number" id="xPa" min="0" max="100" value="${C("pesoAlcpt")}"></label>
   <label class="hint">Monitor si la calificación diagnóstica es mayor a<input type="number" id="xMu" step="0.1" min="0" max="10" value="${C("monitorUmbral")}"></label></div>
   <p><button class="btn" id="xApSave" type="button">Guardar mínimos y ponderación</button></p>`;
+  const FL = S.cfg.apFlag || [];
+  const fh = FL.length ? `<div class="impbox apflag" id="xApFlag" role="status"><p><b>Valores editados a mano conservados:</b> ${FL.map(f => `${ANIO[f.a]} año (mínimo ${f.min ?? "sin mínimo"}; ${esc(convTxt(f.conv) || "sin tabla")})`).join(" · ")}. Los valores por omisión actuales son ${FL.map(f => `${ANIO[f.a]} año: mínimo ${DEFAP.apTabla[f.a].min ?? "sin mínimo"}; ${esc(convTxt(DEFAP.apTabla[f.a].conv))}`).join(" · ")}.</p>
+    <p><button class="btn small" id="xApDef" type="button">Usar los valores por omisión</button> <button class="btn ghost small" id="xApKeep" type="button">Conservar los míos</button></p></div>` : "";
   const ML = (S.cfg.migV13 || []).filter(l => l.p3 || l.alcP3 || l.trayP3);
   const mh = ML.length ? `<h2>3/er. parcial archivado</h2><p class="hint">El programa tiene 2 parciales ALC. Al actualizar a v1.3 se archivaron ${ML.reduce((s, l) => s + l.p3 + l.alcP3 + l.trayP3, 0)} registro(s) de 3/er. parcial (no se borraron; quedan en el respaldo, campo archivoV13, y no entran en promedios): ${esc([...new Set(ML.flatMap(l => l.archivados))].join(", "))}.</p>` : "";
-  if (anchor) anchor.insertAdjacentHTML("beforebegin", html + mh); else VW.insertAdjacentHTML("beforeend", html + mh);
+  const html2 = html.replace('<div class="tscroll"><table class="tbl" id="xAp"', fh + '<div class="tscroll"><table class="tbl" id="xAp"');
+  if (anchor) anchor.insertAdjacentHTML("beforebegin", html2 + mh); else VW.insertAdjacentHTML("beforeend", html2 + mh);
+  const bd = $("#xApDef"); if (bd) bd.onclick = () => { const T = { ...S.cfg.apTabla }; FL.forEach(f => T[f.a] = JSON.parse(JSON.stringify(DEFAP.apTabla[f.a]))); S.cfg.apTabla = T; S.cfg.apFlag = []; saveCfg(); toast("Se aplicaron los valores por omisión"); };
+  const bk = $("#xApKeep"); if (bk) bk.onclick = () => { S.cfg.apFlag = []; saveCfg(); toast("Se conservan tus valores"); };
   $("#xApSave").onclick = () => { const t = {}; ["1", "2", "3", "4"].forEach(a => { t[a] = { min: nv(VW.querySelector(`#xAp [data-k="min"][data-a="${a}"]`).value), conv: parseConv(VW.querySelector(`#xAp [data-k="conv"][data-a="${a}"]`).value) }; });
     const pp = nv($("#xPp").value), pa = nv($("#xPa").value); if (pp == null || pa == null || pp + pa !== 100) { toast("Los pesos deben sumar 100 %"); return; }
-    OLD.forEach(k => delete S.cfg[k]); Object.assign(S.cfg, { apVer: 2, apTabla: t, aprobBase: $("#xBase").value, pesoParc: pp, pesoAlcpt: pa, monitorUmbral: nv($("#xMu").value) ?? 7 }); saveCfg(); toast("Mínimos y ponderación guardados"); }; };
+    OLD.forEach(k => delete S.cfg[k]); Object.assign(S.cfg, { apVer: AP_VER, apFlag: [], apTabla: t, aprobBase: $("#xBase").value, pesoParc: pp, pesoAlcpt: pa, monitorUmbral: nv($("#xMu").value) ?? 7 }); saveCfg(); toast("Mínimos y ponderación guardados"); }; };
 })(window);

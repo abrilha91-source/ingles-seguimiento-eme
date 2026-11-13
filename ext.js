@@ -3,7 +3,7 @@
    lectura local de archivos para Importar, respaldos y ajustes extra. */
 (function (G) {
 "use strict";
-const VER = "1.3";
+const VER = "1.4";
 const AP = () => G.ReplicaIng.ap;
 const MES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
 const MESL = {ene:0,feb:1,mar:2,abr:3,may:4,jun:5,jul:6,ago:7,sep:8,oct:9,nov:10,dic:11,jan:0,apr:3,aug:7,dec:11};
@@ -11,7 +11,7 @@ const DEF = {
   ciclo: "2026-2027", semestre: "1",
   escalaAlcpt: [{min:0,max:29,c:"#C6334A",t:"Remedial obligatorio"},{min:30,max:49,c:"#D98200",t:"Riesgo: candidato a remedial"},{min:50,max:69,c:"#2762C8",t:"En desarrollo"},{min:70,max:100,c:"#11794B",t:"Puntaje alto"}],
   escalaAlc: [{min:0,max:59,c:"#C6334A",t:"Remedial obligatorio"},{min:60,max:69,c:"#D98200",t:"Riesgo"},{min:70,max:84,c:"#2762C8",t:"Suficiente"},{min:85,max:100,c:"#11794B",t:"Sobresaliente"}],
-  planAlc: [{a:"1",sem:"2",libros:"4-5"},{a:"2",sem:"1",libros:"6-7"},{a:"2",sem:"2",libros:"8-9"},{a:"3",sem:"1",libros:"10-11"},{a:"3",sem:"2",libros:"12-13"},{a:"4",sem:"1",libros:"14-15"},{a:"4",sem:"2",libros:"16-17"}]
+  planAlc: [{a:"1",sem:"2",libros:"4-5",ref:"29-30"},{a:"2",sem:"1",libros:"6-7",ref:"30"},{a:"2",sem:"2",libros:"8-9",ref:"41"},{a:"3",sem:"1",libros:"10-11",ref:"45"},{a:"3",sem:"2",libros:"12-13",ref:"53"},{a:"4",sem:"1",libros:"14-15",ref:"55"},{a:"4",sem:"2",libros:"16-17",ref:"61"}]
 };
 const TIPO_ALCPT = [["diagnostico","Diagnóstico"],["seguimiento","Seguimiento"],["final","Final"],["historico","Ciclo anterior"]];
 const TIPO_ALC = [["p1","Examen parcial 1"],["p2","Examen parcial 2"],["final","Examen final del libro"]];
@@ -158,11 +158,15 @@ function axAlc() {
   ${allLib.length ? "" : `<p class="notice">El plan de libros no tiene libros para ${ANIO[AX.a]} año. Revísalo en Ajustes.</p>`}
   <section class="gmon"><div class="gm-k"><em>Promedio</em><b>${f1(avg(vals))}</b></div><div class="gm-k"><em>Capturados</em><b>${vals.length}<small>/${L.filter(o => !o.ex).length}</small></b></div>
     <div class="gm-k"><em>Mínimo · máximo</em><b>${vals.length ? Math.min(...vals) + "<small> · " + Math.max(...vals) + "</small>" : "—"}</b></div><div class="gm-h esc-h">${distHTML(vals, "alc")}</div></section>
+  ${(() => { const rf = AP().refRow(AX.a, sem); if (!rf) return `<p class="notice">${ANIO[AX.a]} año, ${sem === "1" ? "1/er." : "2/o."} semestre: No se imparte.</p>`; const esP = /^p[12]$/.test(AX.tipo);
+    const RR = L.filter(o => !o.ex).map(o => { const x = find(o); return x ? AP().alcRef(o, x) : null; }).filter(Boolean), si = RR.filter(r => r.st === "si").length, no = RR.filter(r => r.st === "no").length;
+    return `<p class="hint alcref" id="axRef">Semestre ${rf.n} · ${ANIO[rf.a]} año ${sem === "1" ? "1/er." : "2/o."} semestre · libros ${esc(AP().librosTxt(rf.libros))} · puntaje de referencia del parcial ALC: <b>${esc(rf.ref || "—")}</b>${esP ? ` · Alcanzan ${si} · No alcanzan ${no}` : " (aplica a los exámenes parciales)"}</p>`; })()}
   ${escLeg("alc")}
-  <div class="tscroll"><table class="tbl cap"><thead><tr><th>Cadete</th><th class="num">Puntaje (0–100)</th><th>Escala</th><th>Forma (después de aplicar)</th><th class="num">Promedio ALC</th><th>Remedial</th></tr></thead><tbody>
+  <div class="tscroll"><table class="tbl cap"><thead><tr><th>Cadete</th><th class="num">Puntaje (0–100)</th><th>Escala</th><th>Referencia</th><th>Forma (después de aplicar)</th><th class="num">Promedio ALC</th><th>Remedial</th></tr></thead><tbody>
   ${L.map(o => { const x = find(o) || {}, v = nv(x.pts), b = banda(v, "alc"), pa = alcAvg(o); return `<tr data-row="${o.id}"><td><button class="nameb" data-id="${o.id}">${esc(o.n)}</button><span class="sub">${grpLabel(o)}${o.ex ? " · exento" : ""}</span></td>
     <td class="num"><input type="number" inputmode="numeric" min="0" max="100" step="1" data-f="pts" value="${v ?? ""}" aria-label="Puntaje ALC de ${esc(o.n)}"></td>
     <td>${v == null ? "—" : `<span class="esc" style="--c:${esc(b ? b.c : "#888")}">${esc(b ? b.t : "fuera de escala")}</span>`}</td>
+    <td>${v == null ? "—" : AP().alcChip(AP().alcRef(o, { ...x, a: x.a || o.a, sem: x.sem || sem, tipo: x.tipo || AX.tipo }))}</td>
     <td><input data-f="forma" value="${esc(x.forma || "")}" ${v == null ? "disabled placeholder=\"Se anota al aplicar\"" : "placeholder=\"Forma aplicada\""} style="max-width:130px" aria-label="Forma aplicada a ${esc(o.n)}"></td>
     <td class="num">${f1(pa)}</td><td>${inRem(o) ? `<span class="badge b-rem">En remedial</span>` : (b && cfg("escalaAlc")[0] === b ? `<button class="btn small ghost" data-inscr="${o.id}">Inscribir</button>` : "")}</td></tr>`; }).join("")}
   </tbody></table></div>`;
@@ -190,10 +194,10 @@ function axRes() {
   ${showLabs.map(l => { const v = r.labs[labs.indexOf(l)]; return `<td class="num">${chipEsc(v == null ? null : Math.round(v), "alcpt")}</td>`; }).join("")}<td class="num">${chipEsc(r.alc == null ? null : Math.round(r.alc), "alc")}</td>${r.ap.map(x => `<td class="num">${x.a + x.n ? `${x.a} / ${x.n}<span class="sub">${AP().pct(x.a, x.n)}% aprob.</span>` : x.s ? `<span class="sub">sin mínimo</span>` : "—"}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 function axPlan() {
-  const P = cfg("planAlc");
-  $("#axBody").innerHTML = `<p class="lead">Plan de libros ALC (tabla C.2). Se edita en Ajustes.</p>
-  <div class="tscroll"><table class="tbl" style="min-width:420px"><thead><tr><th>Año</th><th>Semestre</th><th>Libros</th></tr></thead><tbody>
-  ${["1", "2", "3", "4"].map(a => { const R = P.filter(x => x.a === a); return R.map((x, i) => `<tr>${i ? "" : `<td rowspan="${R.length}">${ANIO[a]} año</td>`}<td>${x.sem === "1" ? "1/er." : "2/o."} semestre</td><td>${esc(x.libros)}</td></tr>`).join(""); }).join("")}</tbody></table></div>`;
+  $("#axBody").innerHTML = `<p class="lead">ALC parcial: libros y puntaje de referencia por semestre. Se edita en Ajustes.</p>
+  <div class="tscroll"><table class="tbl" style="min-width:480px"><thead><tr><th class="num">Semestre</th><th>Año y semestre</th><th>Libros</th><th>Puntaje de referencia</th></tr></thead><tbody>
+  <tr><td class="num">—</td><td>1/er. año · 1/er. semestre</td><td colspan="2">No se imparte</td></tr>
+  ${AP().planRef().map(x => `<tr><td class="num">${x.n}</td><td>${ANIO[x.a]} año · ${x.sem === "1" ? "1/er." : "2/o."} semestre</td><td>${esc(AP().librosTxt(x.libros))}</td><td>${esc(x.ref || "—")}</td></tr>`).join("")}</tbody></table></div>`;
 }
 G.vAlc = vAlc;
 
@@ -378,7 +382,7 @@ function openEme(id) {
   <div class="tscroll"><table class="tbl" style="min-width:860px"><thead><tr><th>Ciclo</th><th>Semestre</th><th>Año</th><th>Grupo</th><th>Docente</th><th>ALCPT</th><th>ALC</th><th class="num">Parciales</th><th>Remedial</th></tr></thead><tbody>
   ${K.map(({ t, al, alc, rem, parc }) => `<tr><td>${esc(t.ciclo)}</td><td>${esc(t.sem || "")}</td><td>${ANIO[t.a] ? ANIO[t.a] + " año" : esc(t.a || "")}</td><td>${esc(t.g || "—")}</td><td>${esc(t.d || "—")}</td>
     <td>${al.map(x => `<span class="nw">${esc(x.l)} <small>${esc(AP().TIPO_TXT[AP().tipoOf(o, x.l)])}</small>: ${chipEsc(nv(x.v), "alcpt")} ${AP().badge(AP().res(o, x.v, x.l))}</span>`).join("<br>") || "—"}${t.ciclo === "2026-2027" && nv(o.diag) != null ? `<br><span class="nw">Diag.: ${chipEsc(nv(o.diag), "alcpt")} ${AP().badge(AP().diagRes(o))}</span>` : ""}</td>
-    <td>${alc.map(x => `<span class="nw">L${esc(x.libro)} ${esc((TIPO_ALC.find(k => k[0] === x.tipo) || [, x.tipo])[1].replace("Examen ", ""))}: ${chipEsc(nv(x.pts), "alc")}</span>`).join("<br>") || "—"}</td>
+    <td>${alc.map(x => `<span class="nw">L${esc(x.libro)} ${esc((TIPO_ALC.find(k => k[0] === x.tipo) || [, x.tipo])[1].replace("Examen ", ""))}: ${chipEsc(nv(x.pts), "alc")} ${AP().alcBadge(AP().alcRef(o, x))}</span>`).join("<br>") || "—"}</td>
     <td class="num">${parc.length ? (parc.reduce((a, b) => a + b, 0) / parc.length).toFixed(2) : "—"}</td><td>${rem.map(h => `${esc(h.alta)} · ${esc(REM_TXT[h.estatus] || (h.baja ? "cerrado" : "en curso"))}`).join("<br>") || "—"}</td></tr>`).join("")}
   </tbody></table></div>
   <h3>Remediales</h3><p class="hint">${(o.remHist || []).map(h => `${esc(h.alta || "—")} a ${esc(h.baja || "en curso")} · ${esc(h.motivo || "")}${h.estatus ? " · " + esc(REM_TXT[h.estatus] || h.estatus) : ""}`).join("<br>") || "No ha estado en el remedial."}</p>
@@ -396,9 +400,9 @@ function kardexAoa(o) {
   const K = kardexRows(o), rows = [["KÁRDEX DE INGLÉS · " + o.n], ["Esc. Mil. Enfría. · Mesa de Idioma Extranjero"], ["Matrícula", o.m || "", "Generación", o.gen || "", "Situación", o.eg ? (o.estatus && o.estatus !== "Egresado" ? o.estatus : "Egresado") : `${ANIO[o.a]} año · Grupo ${o.g}`], [],
     ["Ciclo", "Semestre", "Año", "Grupo", "Docente", "Examen", "Puntaje", "Escala", "Resultado", "Promedio de parciales", "Remedial"]];
   const merges = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 10 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: 10 } }]; const start = rows.length;
-  K.forEach(({ t, al, alc, rem, parc }) => { const ex = [...al.map(x => ["ALCPT " + x.l + " · " + AP().TIPO_TXT[AP().tipoOf(o, x.l)], nv(x.v), "alcpt", AP().res(o, x.v, x.l)]), ...(t.ciclo === "2026-2027" && nv(o.diag) != null ? [["Diagnóstico sep 2026", nv(o.diag), "alcpt", AP().diagRes(o)]] : []), ...alc.map(x => [`ALC libro ${x.libro} · ${(TIPO_ALC.find(k => k[0] === x.tipo) || [, x.tipo])[1]}`, nv(x.pts), "alc", null])];
+  K.forEach(({ t, al, alc, rem, parc }) => { const ex = [...al.map(x => ["ALCPT " + x.l + " · " + AP().TIPO_TXT[AP().tipoOf(o, x.l)], nv(x.v), "alcpt", AP().res(o, x.v, x.l)]), ...(t.ciclo === "2026-2027" && nv(o.diag) != null ? [["Diagnóstico sep 2026", nv(o.diag), "alcpt", AP().diagRes(o)]] : []), ...alc.map(x => { const rr = AP().alcRef(o, x); return [`ALC libro ${x.libro} · ${(TIPO_ALC.find(k => k[0] === x.tipo) || [, x.tipo])[1]}${rr.row ? ` · semestre ${rr.row.n} (libros ${AP().librosTxt(rr.row.libros)})` : ""}`, nv(x.pts), "alc", null, rr]; })];
     const pr = parc.length ? Math.round(parc.reduce((a, b) => a + b, 0) / parc.length * 100) / 100 : ""; const rm = rem.map(h => `${h.alta} · ${REM_TXT[h.estatus] || (h.baja ? "cerrado" : "en curso")}`).join("; ");
-    (ex.length ? ex : [["", "", "", null]]).forEach(e => { const b = banda(e[1], e[2]), r = e[3]; rows.push([t.ciclo, t.sem || "", ANIO[t.a] ? ANIO[t.a] + " año" : (t.a || ""), t.g || "", t.d || "", e[0], e[1] ?? "", b ? b.t : "", r && r.st !== "nd" ? AP().txt(r) + (r.min != null ? ` (mín. ${r.min})` : "") : "", pr, rm]); }); });
+    (ex.length ? ex : [["", "", "", null]]).forEach(e => { const b = banda(e[1], e[2]), r = e[3]; rows.push([t.ciclo, t.sem || "", ANIO[t.a] ? ANIO[t.a] + " año" : (t.a || ""), t.g || "", t.d || "", e[0], e[1] ?? "", b ? b.t : "", r && r.st !== "nd" ? AP().txt(r) + (r.min != null ? ` (mín. ${r.min})` : "") : e[4] ? AP().alcTxt(e[4]) : "", pr, rm]); }); });
   const end = rows.length - 1; if (end >= start) merges.push(...XL.runs(rows, [0, 1, 2, 3, 4, 9, 10], start, end));
   const P = AP().progreso(o); rows.push([], ["Avance ALCPT del ciclo " + cfg("ciclo") + ": diagnóstico → seguimientos → final"]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 10 } });
   rows.push(["Examen", "", "Etiqueta", "", "Fecha", "", "Puntos", "Dif. vs diagnóstico", "Resultado", "", ""]); const hp = rows.length - 1; merges.push({ s: { r: hp, c: 0 }, e: { r: hp, c: 1 } }, { s: { r: hp, c: 2 }, e: { r: hp, c: 3 } }, { s: { r: hp, c: 4 }, e: { r: hp, c: 5 } }, { s: { r: hp, c: 8 }, e: { r: hp, c: 10 } });
@@ -515,17 +519,17 @@ async function importLista(file) { try { const X = await loadXLSX(); const wb = 
   if (!items.length) { toast("No se encontró una tabla con columnas Año, Grupo y Nombre"); return; }
   await S.db._bulk(items); await S.db._notify("alumnos"); toast(`${n} cadetes nuevos · ${upd} actualizados`); } catch (e) { console.error(e); toast("No se pudo leer la lista"); } }
 async function concentradoXlsx() { try { const X = await XL.lib(), wb = X.utils.book_new(), L = all().sort((x, y) => x.a.localeCompare(y.a) || String(x.g).localeCompare(String(y.g)) || x.n.localeCompare(y.n, "es")); const labs = allLabels();
-  const head = ["Año", "Grupo", "Docente", "Nombre", "Matrícula", "Exento", "Diagnóstico 2026", ...labs.map(l => "ALCPT " + l), "ALC promedio", ...PARC.map(p => p[1]), "Promedio", "Estado", "Remedial", "Estatus remedial", "Faltas sabatinas", "Mínimo ALCPT del año", "Resultado diagnóstico", "Último ALCPT", "Resultado último ALCPT", "Monitor", "Calificación final", "Seguimientos", "Último seguimiento", "Dif. vs diagnóstico", "Resultado último seguimiento"];
+  const head = ["Año", "Grupo", "Docente", "Nombre", "Matrícula", "Exento", "Diagnóstico 2026", ...labs.map(l => "ALCPT " + l), "ALC promedio", ...PARC.map(p => p[1]), "Promedio", "Estado", "Remedial", "Estatus remedial", "Faltas sabatinas", "Mínimo ALCPT del año", "Resultado diagnóstico", "Último ALCPT", "Resultado último ALCPT", "Monitor", "Calificación final", "Seguimientos", "Último seguimiento", "Dif. vs diagnóstico", "Resultado último seguimiento", "Último parcial ALC", "Referencia ALC", "Resultado parcial ALC"];
   const rows = [["CONCENTRADO DE INGLÉS · " + cfg("ciclo")], ["Esc. Mil. Enfría. · Mesa de Idioma Extranjero · " + hoy()], head];
   L.forEach(o => rows.push([ANIO[o.a] + " año", "Grupo " + o.g, o.d || "", o.n, o.m || "", o.ex ? "Sí" : "", o.diag ?? "", ...labs.map(l => { const h = (o.alcpt || []).find(x => x[0] === l); return h ? h[1] : ""; }), alcAvg(o) == null ? "" : Math.round(alcAvg(o) * 10) / 10, ...parts(o).map(v => v == null ? "" : v), prom(o) == null ? "" : prom(o), o.ex ? "Exento" : EST_TXT[estAc(o)], inRem(o) ? "Sí" : "", o.rem ? REM_TXT[remEst(o)] || "" : "", inRem(o) ? faltas(o) : "", ...concAp(o)]));
   const W = head.length; const merges = [{ s: { r: 0, c: 0 }, e: { r: 0, c: W - 1 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: W - 1 } }, ...XL.runs(rows, [0, 1, 2], 3, rows.length - 1)];
-  X.utils.book_append_sheet(wb, XL.sheet(X, rows, [9, 10, 28, 36, 14, 7, 10, ...labs.map(() => 10), 9, 10, 10, 9, 14, 9, 14, 9, 12, 18, 12, 22, 9, 12, 11, 18, 11, 18], merges, [2]), "Concentrado");
+  X.utils.book_append_sheet(wb, XL.sheet(X, rows, [9, 10, 28, 36, 14, 7, 10, ...labs.map(() => 10), 9, 10, 10, 9, 14, 9, 14, 9, 12, 18, 12, 22, 9, 12, 11, 18, 11, 18, 22, 10, 22], merges, [2]), "Concentrado");
   apSheet(X, wb, L); segSheet(X, wb, L);
   await XL.save(X, wb, `CONCENTRADO INGLES ${hoy()}.xlsx`); toast("Concentrado descargado"); } catch (e) { console.error(e); toast("No se pudo preparar el concentrado"); } }
 function concAp(o) { const A = AP(), m = A.minFor(String(o.a)), d = A.diagRes(o), l = A.lastRes(o), f = A.calFinal(o);
   const P = A.progreso(o), u = P.ult;
   return [m.min == null ? "Sin mínimo" : m.min, d.st === "nd" ? "" : A.txt(d), l.st === "nd" ? "" : `${l.v} (${l.lab})`, l.st === "nd" ? "" : A.txt(l) + (l.min != null && l.a !== String(o.a) ? ` · mín. ${l.min} de ${ANIO[l.a]} año` : ""), A.monitor(o) ? "Sí" : "", f.st === "extra" ? "Extraordinario" : f.v != null ? f.v : "",
-    P.seg.length || "", u ? `${u.v} (${u.lab})` : "", u && u.dif != null ? u.dif : "", u ? A.txt(u.r) : ""]; }
+    P.seg.length || "", u ? `${u.v} (${u.lab})` : "", u && u.dif != null ? u.dif : "", u ? A.txt(u.r) : "", ...(r => r ? [`${r.v} (libro ${r.x.libro}, ${r.x.tipo === "p1" ? "parcial 1" : "parcial 2"})`, r.row ? r.row.ref : "", A.alcTxt(r)] : ["", "", ""])(A.lastAlcPar(o))]; }
 /* hoja de avance del seguimiento por año y grupo */
 function segSheet(X, wb, L) { const A = AP(), rows = [["AVANCE DEL SEGUIMIENTO ALCPT POR AÑO Y GRUPO · " + cfg("ciclo")], ["Diagnóstico (orden de rectoría) contra el último ALCPT de seguimiento (orden de la Directora). No cuentan para la calificación."],
     ["Año", "Grupo", "Cadetes", "Con seguimiento", "Con diagnóstico y seguimiento", "Prom. diagnóstico", "Prom. último seguimiento", "Avance promedio (pts)", "Mejoraron", "Aprueban ahora", "No aprueban", "% aprueba ahora"]];
@@ -570,10 +574,11 @@ G.vCfg = function () {
   <h2>Ciclo lectivo</h2><div class="g2" style="max-width:520px"><label class="hint">Ciclo actual<input id="xCi" value="${esc(cfg("ciclo"))}" placeholder="2026-2027"></label><label class="hint">Semestre actual<select id="xSe"><option value="1" ${cfg("semestre") === "1" ? "selected" : ""}>1/er. semestre</option><option value="2" ${cfg("semestre") === "2" ? "selected" : ""}>2/o. semestre</option></select></label></div>
   <h2>Escala de colores (semáforo de remedial)</h2><p class="lead">Rangos de puntaje (0–100) y su color. La primera banda marca a los candidatos al remedial.</p>
   <h3>ALCPT</h3>${escTable("xEsA", cfg("escalaAlcpt"))}<h3>ALC (exámenes de libro)</h3>${escTable("xEsL", cfg("escalaAlc"))}
-  <h2>Plan de libros ALC (tabla C.2)</h2><div class="tscroll"><table class="tbl" id="xPlan" style="min-width:420px"><thead><tr><th>Año</th><th>Semestre</th><th>Libros</th></tr></thead><tbody>
-  ${P.map((x, i) => `<tr><td><select data-k="a">${["1", "2", "3", "4"].map(a => `<option value="${a}" ${x.a === a ? "selected" : ""}>${ANIO[a]} año</option>`).join("")}</select></td><td><select data-k="sem"><option value="1" ${x.sem === "1" ? "selected" : ""}>1/er.</option><option value="2" ${x.sem === "2" ? "selected" : ""}>2/o.</option></select></td><td><input data-k="libros" value="${esc(x.libros)}" placeholder="Ej. 6-7"></td></tr>`).join("")}</tbody></table></div>
-  <p class="hint">Supuesto inicial: en 2/o., 3/er. y 4/o. año el primer par de libros corresponde al 1/er. semestre y el segundo al 2/o. Corrígelo si no es así.</p>
-  <p style="margin-top:12px"><button class="btn" id="xSave">Guardar ciclo, escalas y plan</button></p>
+  <h2>ALC parcial: libros y puntaje de referencia por semestre</h2><div class="tscroll"><table class="tbl" id="xPlan" style="min-width:560px"><thead><tr><th class="num">Semestre</th><th>Año y semestre</th><th>Libros</th><th>Puntaje de referencia</th></tr></thead><tbody>
+  <tr class="noimp"><td class="num">—</td><td>1/er. año · 1/er. semestre</td><td colspan="2"><span class="hint">No se imparte</span></td></tr>
+  ${AP().planRef().map(x => `<tr data-a="${x.a}" data-sem="${x.sem}"><td class="num">${x.n}</td><td>${ANIO[x.a]} año · ${x.sem === "1" ? "1/er." : "2/o."} semestre</td><td><input data-k="libros" value="${esc(x.libros)}" placeholder="Ej. 6-7" aria-label="Libros del semestre ${x.n}" style="width:110px"></td><td><input data-k="ref" value="${esc(x.ref)}" placeholder="Ej. 30" aria-label="Puntaje de referencia del semestre ${x.n}" style="width:110px"></td></tr>`).join("")}</tbody></table></div>
+  <p class="hint">Aplica a los exámenes parciales ALC (no al ALCPT). Alcanza: puntaje del parcial igual o mayor a la referencia (en un rango, el valor menor). Carga horaria: 549 h en 7 semestres, 78 h por semestre, 2 libros por semestre (39 h por libro).</p>
+  <p style="margin-top:12px"><button class="btn" id="xSave">Guardar ciclo, escalas, libros y referencias</button></p>
   <h2>Datos de este dispositivo</h2><p class="lead">La app no envía datos a ningún servidor. Los cadetes, puntajes y remediales se guardan solo en este navegador. Descarga un respaldo con frecuencia.</p>
   <div class="bar"><button class="btn" id="xDl">Descargar respaldo JSON</button><label class="btn ghost">Importar respaldo JSON<input type="file" id="xUp" accept=".json,application/json" hidden></label>
   <label class="btn ghost">Importar lista de cadetes (Excel o CSV)<input type="file" id="xLi" accept=".xlsx,.xls,.csv" hidden></label><button class="btn ghost" id="xCo">Descargar concentrado .xlsx</button></div>
@@ -587,7 +592,7 @@ G.vCfg = function () {
   bindE("xEsA"); bindE("xEsL");
   $("#xSave").onclick = () => { const ea = readEsc("xEsA"), el = readEsc("xEsL"); if (!ea.length || !el.length) { toast("Cada escala necesita al menos una banda"); return; }
     S.cfg.escalaAlcpt = ea; S.cfg.escalaAlc = el; S.cfg.ciclo = $("#xCi").value.trim() || DEF.ciclo; S.cfg.semestre = $("#xSe").value;
-    S.cfg.planAlc = [...document.querySelectorAll("#xPlan tbody tr")].map(tr => ({ a: tr.querySelector('[data-k="a"]').value, sem: tr.querySelector('[data-k="sem"]').value, libros: tr.querySelector('[data-k="libros"]').value.trim() })); saveCfg(); toast("Ajustes guardados"); };
+    S.cfg.planAlc = [...document.querySelectorAll("#xPlan tbody tr[data-a]")].map(tr => ({ a: tr.dataset.a, sem: tr.dataset.sem, libros: tr.querySelector('[data-k="libros"]').value.trim(), ref: tr.querySelector('[data-k="ref"]').value.trim() })); saveCfg(); toast("Ajustes guardados"); };
   $("#xDl").onclick = () => downloadJson().catch(e => { console.error(e); toast("No se pudo descargar"); });
   $("#xUp").onchange = e => { const f = e.target.files[0]; if (f) importJson(f); e.target.value = ""; };
   $("#xLi").onchange = e => { const f = e.target.files[0]; if (f) importLista(f); e.target.value = ""; };

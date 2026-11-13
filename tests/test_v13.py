@@ -30,8 +30,8 @@ A = {
  "v-4b": cad("Ficticio Cuatro Beta", "4", "1", [("Oct 2026", 50, "seguimiento", "2026-10-24")], 42, **REM(42)),
  # 4/o.: seguimiento ANTES del alta: no cuenta para salir
  "v-4c": cad("Ficticio Cuatro Gama", "4", "2", [("Oct 2026", 60, "seguimiento", "2026-10-03")], 41, **REM(41, "2026-10-10")),
- # 3/er. (mín. 31): diag 25, seguimiento 33 → sale
- "v-3a": cad("Ficticia Tres Alfa", "3", "1", [("Nov 2026", 33, "seguimiento", "2026-11-07")], 25, **REM(25)),
+ # 3/er. (mín. 45): diag 25, seguimiento 46 → sale
+ "v-3a": cad("Ficticia Tres Alfa", "3", "1", [("Nov 2026", 46, "seguimiento", "2026-11-07")], 25, **REM(25)),
  # 3/er.: sin remedial, diag 40, sin seguimiento
  "v-3b": cad("Ficticio Tres Beta", "3", "1", [], 40, cal={"p1": {"e": 9, "pt": 3, "pa": 1}, "p2": {"e": 9, "pt": 3, "pa": 1}}),
  # 2/o. (mín. 45): sin diagnóstico; seguimiento 47
@@ -131,7 +131,7 @@ with sync_playwright() as p:
     pg.fill("#xPp", "60"); pg.fill("#xPa", "40"); pg.click("#xApSave"); pg.wait_for_timeout(400)
     # 8. respaldo v1.3 y recarga sin re-migrar
     jp = download(pg, lambda: pg.click("#xDl")); J = json.load(open(jp)); o = J["alumnos"]["v-4a"]
-    rec("Respaldo JSON v1.3 conserva lo archivado", J["version"] == "1.3" and o.get("dataVer") == 3 and o["archivoV13"]["calP3"]["e"] == 2 and "p3" not in o["cal"], J["version"])
+    rec("Respaldo JSON v1.4 conserva lo archivado", J["version"] == "1.4" and o.get("dataVer") == 3 and o["archivoV13"]["calP3"]["e"] == 2 and "p3" not in o["cal"], J["version"])
     n0 = len(pg.evaluate("S.cfg.migV13 || []")); pg.reload(); pg.wait_for_timeout(1500)
     rec("Persistencia: tras recargar no se vuelve a migrar", len(pg.evaluate("S.cfg.migV13 || []")) == n0 and pg.evaluate("S.items.get('v-4a').dataVer") == 3, n0)
     tab(pg, "cfg"); pg.set_input_files("#xUp", str(jp)); pg.wait_for_timeout(1500)

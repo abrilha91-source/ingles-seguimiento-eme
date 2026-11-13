@@ -1,0 +1,136 @@
+{
+ "total": 26,
+ "ok": 26,
+ "pruebas": [
+  {
+   "prueba": "Migración: valores por omisión v1.2/v1.3 pasan a la tabla manuscrita",
+   "ok": true,
+   "detalle": "{'v': 3, 'flag': [], 'm': [25, 31, 45, 55], 'c': ['30=10, 29=9, 28=8, 27=7, 26=6.5, 25=6', '36=10, 35=9, 34=8, 33=7, 32=6.5, 31=6', '50=10, 49=9, 48=8, 47=7, 46=6.5, 45=6', '60=10, 59=9, 58=8, 57=7, 56=6.5, 55=6']}"
+  },
+  {
+   "prueba": "Ajustes: sin aviso de valores editados",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Ajustes: tabla Año | Mínimo | Ponderación con 25/31/45/55",
+   "ok": true,
+   "detalle": "{'h': ['Año', 'Mínimo', 'Ponderación (puntos = calificación)'], 'min': ['25', '31', '45', '55'], 'c': ['30=10, 29=9, 28=8, 27=7, 26=6.5, 25=6', '36=10, 35=9, 34=8, 33=7, 32=6.5, 31=6', '50=10, 49=9, 48=8, 47=7, 46=6.5, 45=6', '60=10, 59=9, 58=8, 57=7, 56=6.5, 55=6']}"
+  },
+  {
+   "prueba": "Migración guardada: tras recargar sigue la tabla nueva",
+   "ok": true,
+   "detalle": "[3, 45]"
+  },
+  {
+   "prueba": "Migración: valor editado a mano (2/o. 40) se conserva y se señala; los demás se actualizan",
+   "ok": true,
+   "detalle": "{'m': [25, 40, 45, 55], 'flag': [{'a': '2', 'min': 40, 'conv': [[44, 10], [40, 6]]}]}"
+  },
+  {
+   "prueba": "Ajustes: aviso de valores editados con los valores por omisión",
+   "ok": true,
+   "detalle": "Valores editados a mano conservados: 2/o. año (mínimo 40; 44=10, 40=6). Los valores por omisión actuales son 2/o. año: mínimo 31; 36=10, 35=9, 34=8, 33=7, 32=6.5, 31=6.\n    Usar los valores por omisión Conservar los míos"
+  },
+  {
+   "prueba": "Botón «Usar los valores por omisión» aplica 2/o. 31 y quita el aviso",
+   "ok": true,
+   "detalle": "[31, []]"
+  },
+  {
+   "prueba": "Ajustes: tabla ALC parcial Semestre | Año y semestre | Libros | Puntaje de referencia",
+   "ok": true,
+   "detalle": "['Semestre', 'Año y semestre', 'Libros', 'Puntaje de referencia']"
+  },
+  {
+   "prueba": "Ajustes: 7 semestres con libros y referencia; 1/er. año 1/er. semestre «No se imparte»",
+   "ok": true,
+   "detalle": "[['—', '1/er. año · 1/er. semestre', 'No se imparte'], ['1', '1/er. año · 2/o. semestre', '4-5', '29-30'], ['2', '2/o. año · 1/er. semestre', '6-7', '30'], ['3', '2/o. año · 2/o. semestre', '8-9', '41'], ['4', '3/er. año · 1/er. semestre', '10-11', '45'], ['5', '3/er. año · 2/o. semestre', '12-13', "
+  },
+  {
+   "prueba": "Ajustes: sin textos de fuente (C.2, propuesta, CEI)",
+   "ok": true,
+   "detalle": "[]"
+  },
+  {
+   "prueba": "Referencia 1/er. año: rango 29-30, umbral 29",
+   "ok": true,
+   "detalle": "{'r12': {'n': 1, 'a': '1', 'sem': '2', 'libros': '4-5', 'ref': '29-30'}, 'thr': 29, 'c': ['si', 'no', 'si', 'si', 'no', 'si', 'no', 'si', 'si', 'no', 'noimp', 'np'], 'ptot': 8.3, 'last': 'no', 'lastv': 54}"
+  },
+  {
+   "prueba": "Alcanza / No alcanza por semestre (29/28 en 1/o.; 30, 41, 45, 53, 55, 61)",
+   "ok": true,
+   "detalle": "['si', 'no', 'si', 'si', 'no', 'si', 'no', 'si', 'si', 'no', 'noimp', 'np']"
+  },
+  {
+   "prueba": "Calificación del parcial sin cambio (examen 60 % + portafolio + participación)",
+   "ok": true,
+   "detalle": "8.3"
+  },
+  {
+   "prueba": "Último parcial ALC del ciclo (libro 14, parcial 2 = 54: no alcanza 55)",
+   "ok": true,
+   "detalle": "{'r12': {'n': 1, 'a': '1', 'sem': '2', 'libros': '4-5', 'ref': '29-30'}, 'thr': 29, 'c': ['si', 'no', 'si', 'si', 'no', 'si', 'no', 'si', 'si', 'no', 'noimp', 'np'], 'ptot': 8.3, 'last': 'no', 'lastv': 54}"
+  },
+  {
+   "prueba": "ALC por libro: semestre 6, libros 14 y 15, referencia 55, conteo",
+   "ok": true,
+   "detalle": "Semestre 6 · 4/o. año 1/er. semestre · libros 14 y 15 · puntaje de referencia del parcial ALC: 55 · Alcanzan 1 · No alcanzan 0"
+  },
+  {
+   "prueba": "ALC por libro 2/o. 1/er. sem.: 30 alcanza, 29 no alcanza",
+   "ok": true,
+   "detalle": "Semestre 2 · 2/o. año 1/er. semestre · libros 6 y 7 · puntaje de referencia del parcial ALC: 30 · Alcanzan 1 · No alcanzan 1"
+  },
+  {
+   "prueba": "Pestaña de libros: referencia y «No se imparte»",
+   "ok": true,
+   "detalle": "ALC parcial: libros y puntaje de referencia por semestre. Se edita en Ajustes.\n  SemestreAño y semestreLibrosPuntaje de referencia\n  —1/er. año · 1/er. semestreNo se imparte\n  11/er. año · 2/o. semestre4 y 529-3022/o. año · 1/er. semestre6 y 73032/o. año · 2/o. semestre8 y 94143/er. año · 1/er. seme"
+  },
+  {
+   "prueba": "Ficha: tabla ALC parcial con semestre, libros y resultado",
+   "ok": true,
+   "detalle": "FCFicticia Cuatro Uno4/o. año · Grupo 1 · Docente: Docente FicticioDiag. aprob.Monitor\n    8.30Promedio · aprobado—ALCPT 58Diagnóstico—Sin remedial\n    ×\n  Historial ALCPT y diagnóstico\n  05010058Diag"
+  },
+  {
+   "prueba": "Seguimiento EME: insignias alcanza / no alcanza",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Kárdex .xlsx: Alcanza / No alcanza (ref. 55) con semestre y libros, Noto Sans 10",
+   "ok": true,
+   "detalle": "['Alcanza (ref. 55)', 'No alcanza (ref. 55)']"
+  },
+  {
+   "prueba": "Estadística: pedido en español → ALC parcial por grupo",
+   "ok": true,
+   "detalle": "ALC parcial: referencia del semestre · por grupo"
+  },
+  {
+   "prueba": "Estadística .xlsx: Alcanzan / No alcanzan / % alcanza y detalle con referencia",
+   "ok": true,
+   "detalle": "['ESTADÍSTICA DE INGLÉS · ALC parcial: referencia del semestre', 'Esc. Mil. Enfría. · Mesa de Idioma Extranjero', 'Filtro', 'todos los cadetes del ciclo', 'Pedido', 'cadetes que alcanzan la referencia del parcial ALC por grupo', 'Agrupado por', 'Grupo', 'Fecha de emisión', '2026-11-13', 'Grupo', 'Ca"
+  },
+  {
+   "prueba": "Concentrado: último parcial ALC, referencia y resultado",
+   "ok": true,
+   "detalle": "['Resultado último seguimiento', 'Último parcial ALC', 'Referencia ALC', 'Resultado parcial ALC']"
+  },
+  {
+   "prueba": "Ajustes: referencia editable (4/o. 1/er. sem. 50 → 54 alcanza)",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Respaldo JSON v1.4 con tabla ALCPT y referencias ALC",
+   "ok": true,
+   "detalle": "1.4"
+  },
+  {
+   "prueba": "Sin errores en consola",
+   "ok": true,
+   "detalle": "[]"
+  }
+ ]
+}
