@@ -1,0 +1,196 @@
+{
+ "total": 38,
+ "ok": 38,
+ "pruebas": [
+  {
+   "prueba": "Carga del respaldo sintético v1.2",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Migración: 3/er. parcial sale de cal y queda archivado",
+   "ok": true,
+   "detalle": "{'p3': False, 'arch': {'e': 2, 'pt': 0, 'pa': 0}, 'alc': ['p1'], 'alcA': 1, 'tp': [7, 8], 'tc': False, 'ta': 1, 'ver': 3, 'tipos': {'Feb 2026': 'historico', 'Oct 2026': 'seguimiento', 'Nov 2026': 'seguimiento', 'Ene 2027': 'final'}, 'orig': 'periodo', 'log': [{'at': '2026-11-13T14:47:21.106Z', 'cade"
+  },
+  {
+   "prueba": "Migración: examen ALC parcial 3 archivado, parcial 1 conservado",
+   "ok": true,
+   "detalle": "{'p3': False, 'arch': {'e': 2, 'pt': 0, 'pa': 0}, 'alc': ['p1'], 'alcA': 1, 'tp': [7, 8], 'tc': False, 'ta': 1, 'ver': 3, 'tipos': {'Feb 2026': 'historico', 'Oct 2026': 'seguimiento', 'Nov 2026': 'seguimiento', 'Ene 2027': 'final'}, 'orig': 'periodo', 'log': [{'at': '2026-11-13T14:47:21.106Z', 'cade"
+  },
+  {
+   "prueba": "Migración: trayectoria con 3 parciales queda en 2 y el tercero archivado",
+   "ok": true,
+   "detalle": "{'p3': False, 'arch': {'e': 2, 'pt': 0, 'pa': 0}, 'alc': ['p1'], 'alcA': 1, 'tp': [7, 8], 'tc': False, 'ta': 1, 'ver': 3, 'tipos': {'Feb 2026': 'historico', 'Oct 2026': 'seguimiento', 'Nov 2026': 'seguimiento', 'Ene 2027': 'final'}, 'orig': 'periodo', 'log': [{'at': '2026-11-13T14:47:21.106Z', 'cade"
+  },
+  {
+   "prueba": "Migración: tipos ALCPT (ciclo actual → seguimiento, anterior → ciclo anterior, final se respeta)",
+   "ok": true,
+   "detalle": "{'p3': False, 'arch': {'e': 2, 'pt': 0, 'pa': 0}, 'alc': ['p1'], 'alcA': 1, 'tp': [7, 8], 'tc': False, 'ta': 1, 'ver': 3, 'tipos': {'Feb 2026': 'historico', 'Oct 2026': 'seguimiento', 'Nov 2026': 'seguimiento', 'Ene 2027': 'final'}, 'orig': 'periodo', 'log': [{'at': '2026-11-13T14:47:21.106Z', 'cade"
+  },
+  {
+   "prueba": "Migración: bitácora con conteo y nombres archivados",
+   "ok": true,
+   "detalle": "{'at': '2026-11-13T14:47:21.106Z', 'cadetes': 6, 'p3': 1, 'alcP3': 1, 'trayP3': 1, 'seguimiento': 2, 'cicloAnterior': 1, 'archivados': ['Ficticia Cuatro Alfa']}"
+  },
+  {
+   "prueba": "Ajustes: aviso de 3/er. parcial archivado y tabla simple sin CEI/propuesta",
+   "ok": true,
+   "detalle": "ALCPT: puntaje mínimo aprobatorio por año\n  AñoMínimoPonderación (puntos = calificación)\n  1/er. año\n    2/o. año\n    3/er. año\n    4/o. año\n    \n  Ponderación: puntos=calificación separados por coma, de mayor a menor (el primer renglón vale también para más puntos). Por debajo del mínimo: No aproba"
+  },
+  {
+   "prueba": "Calificaciones: exactamente 2 parciales",
+   "ok": true,
+   "detalle": "{'parc': ['p1', 'p2'], 'parts': [8.3, 7.2], 'prom': 7.75, 'cf': {'st': 'ap', 'v': 7.85, 'p': 7.75, 'f': {'l': 'Ene 2027', 'v': 58, 'm': {'fecha': '2027-01-20', 'forma': '', 'tipo': 'final'}}, 'r': {'st': 'ap', 'a': '4', 'min': 55, 'oficial': True, 'sinFecha': False, 'cal': 8, 'v': 58}}}"
+  },
+  {
+   "prueba": "Parcial = examen 60 % + portafolio + participación",
+   "ok": true,
+   "detalle": "[8.3, 7.2]"
+  },
+  {
+   "prueba": "Promedio de los 2 parciales (el 3/er. archivado no cuenta)",
+   "ok": true,
+   "detalle": "7.75"
+  },
+  {
+   "prueba": "Calificación final = parciales 60 % + ALCPT final convertido 40 %",
+   "ok": true,
+   "detalle": "{'st': 'ap', 'v': 7.85, 'p': 7.75, 'f': {'l': 'Ene 2027', 'v': 58, 'm': {'fecha': '2027-01-20', 'forma': '', 'tipo': 'final'}}, 'r': {'st': 'ap', 'a': '4', 'min': 55, 'oficial': True, 'sinFecha': False, 'cal': 8, 'v': 58}}"
+  },
+  {
+   "prueba": "Vista Calificaciones sin 3/er. parcial",
+   "ok": true,
+   "detalle": "Captura de calificaciones\n  Calificación del parcial = examen × 0.6 + portafolio de evidencias (hasta 3) + participación (hasta 1). Cada cambio se guarda al salir de la casilla.\n  2/o. año3/er. año4/o. año\n  Grupo 1Grupo 2\n  1/er. parcial2/o. parcial\n  Docente FicticioInscribir reprobados al remedia"
+  },
+  {
+   "prueba": "Cadetes sin columna de 3/er. parcial",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Importar calificaciones: solo 1/er. y 2/o. parcial",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Importar ALCPT: tipo (Seguimiento por omisión) y fecha",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Avance: diagnóstico → seguimiento 1 → seguimiento 2 → final, con diferencia y resultado",
+   "ok": true,
+   "detalle": "[['Diagnóstico', 40, None, 'na'], ['Seguimiento 1', 45, 5, 'na'], ['Seguimiento 2', 56, 16, 'ap'], ['Final', 58, 18, 'ap']]"
+  },
+  {
+   "prueba": "Avance: el ciclo anterior no entra",
+   "ok": true,
+   "detalle": "{'pasos': [['Diagnóstico', 40, None, 'na'], ['Seguimiento 1', 45, 5, 'na'], ['Seguimiento 2', 56, 16, 'ap'], ['Final', 58, 18, 'ap']], 'ult': 56, 's4a': {'f': 'seguimiento ALCPT Nov 2026', 'v': 56, 'min': 55}, 's4b': None, 's4c': None, 's3a': {'f': 'seguimiento ALCPT Nov 2026', 'v': 33, 'min': 31}, "
+  },
+  {
+   "prueba": "Salida del remedial: seguimiento posterior al alta alcanza el mínimo (primera vez)",
+   "ok": true,
+   "detalle": "[{'f': 'seguimiento ALCPT Nov 2026', 'v': 56, 'min': 55}, {'f': 'seguimiento ALCPT Nov 2026', 'v': 33, 'min': 31}, None]"
+  },
+  {
+   "prueba": "Salida del remedial: seguimiento anterior al alta no cuenta",
+   "ok": true,
+   "detalle": "None"
+  },
+  {
+   "prueba": "Avance sin diagnóstico: diferencia vacía",
+   "ok": true,
+   "detalle": "[['Seguimiento 1', None]]"
+  },
+  {
+   "prueba": "Avance por año 4/o.: prom. diag. 41 → 55.3 (último seg.), 3/3 mejoraron, 2 ya aprueban",
+   "ok": true,
+   "detalle": "{'n': 3, 'conSeg': 3, 'both': 3, 'dAvg': 41, 'sAvg': 55.3, 'avAvg': 14.3, 'mej': 3, 'ap': 2, 'na': 1, 'pct': 66.7}"
+  },
+  {
+   "prueba": "Ficha: vista de avance con gráfica",
+   "ok": true,
+   "detalle": "Avance ALCPT del ciclo: diagnóstico → seguimientos → finalExamenFechaPuntosDif. vs diagnósticoResultado\n  Diagnóstico21 sep 202640\n    —No aprobadomín. 55 · 4/o. añoSeguimiento 1ALCPT Oct 202624 oct 202645\n    +5No aprobadomín. 55 · 4/o. añoSeguimiento 2ALCPT Nov 20267 nov 202656\n    +16Aprobadomín."
+  },
+  {
+   "prueba": "ALC y ALCPT: pestaña Avance del seguimiento con columnas por seguimiento y gráfica",
+   "ok": true,
+   "detalle": "Calificaciones ALC y ALCPT\n  Captura los puntajes de ALCPT y de los exámenes ALC de cada libro. ALCPT: Diagnóstico (orden de rectoría, define el ingreso al remedial), Seguimiento (orden de la Directora, los que se apliquen, no cuentan para la calificación) y Final (cuenta el 40 %). El color sigue la"
+  },
+  {
+   "prueba": "ALCPT: el selector de examen muestra el tipo",
+   "ok": true,
+   "detalle": "Diagnóstico 21 sep. 2026ALCPT Feb 2026 · Ciclo anteriorALCPT Oct 2026 · SeguimientoALCPT Nov 2026 · SeguimientoALCPT Ene 2027 · Final+ Registrar examen nuevo…"
+  },
+  {
+   "prueba": "Seguimiento EME: vista de avance en el kárdex",
+   "ok": true,
+   "detalle": "FCFicticia Cuatro AlfaGeneración — · 4/o. año · Grupo 1\n    ×\n  ProgresoPuntajes durante su estanciaALCPTALC y diagnóstico05010030ALCPT Feb 202640Diagnóstico sep 202645ALCPT Oct 202656ALCPT Nov 202658"
+  },
+  {
+   "prueba": "Kárdex .xlsx: avance (diagnóstico → seguimientos → final), tipos, Noto Sans 10 y celdas combinadas",
+   "ok": true,
+   "detalle": "(96, 0, 39)"
+  },
+  {
+   "prueba": "Panorama: tarjeta de avance del remedial",
+   "ok": true,
+   "detalle": "Avance del seguimientoDiagnóstico (rectoría) contra el último ALCPT de seguimiento (Directora).\n  En el remedial4Con seguimiento4/4\n  Diagnóstico → último seguimiento37 → 49.8 (+12.8 pts)\n  Mejoraron4/4Ya alcanzan el mínimo3 (75%)\n  Pueden salir del remedial2\n  AñoEn remedialCon seguimientoProm. dia"
+  },
+  {
+   "prueba": "Estadística: 'avance del seguimiento por grupo' se entiende",
+   "ok": true,
+   "detalle": "ALCPT: avance del seguimiento · por grupo"
+  },
+  {
+   "prueba": "Estadística: prom. diagnóstico vs último seguimiento, % aprueba ahora y mejoraron",
+   "ok": true,
+   "detalle": "Estadística\n  Pide un dato general o específico. Escribe tu pedido o usa los filtros; el resultado se descarga en Excel.\n  Calcular\n  Entendí: ALCPT: avance del seguimiento · por grupo\n  \n    DatoALCPT: último examenALCPT: un examenDiagnóstico ALCPT 2026ALCPT: avance (último − primero)ALC: promedio "
+  },
+  {
+   "prueba": "Estadística: lista de datos sin 3/er. parcial",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Estadística .xlsx: columnas de avance + hoja Avance seguimiento, Noto Sans 10",
+   "ok": true,
+   "detalle": "(['Resumen', 'Detalle', 'Aprobación ALCPT', 'Avance seguimiento'], 0)"
+  },
+  {
+   "prueba": "Concentrado: 2 parciales, sin 3/er., con último seguimiento",
+   "ok": true,
+   "detalle": "['Año', 'Grupo', 'Docente', 'Nombre', 'Matrícula', 'Exento', 'Diagnóstico 2026', 'ALCPT Feb 2026', 'ALCPT Oct 2026', 'ALCPT Nov 2026', 'ALCPT Ene 2027', 'ALC promedio', '1/er. parcial', '2/o. parcial', 'Promedio', 'Estado', 'Remedial', 'Estatus remedial', 'Faltas sabatinas', 'Mínimo ALCPT del año', "
+  },
+  {
+   "prueba": "Concentrado: hoja Avance seguimiento con celdas combinadas y Noto Sans 10",
+   "ok": true,
+   "detalle": "(5, 0)"
+  },
+  {
+   "prueba": "Ponderación final configurable (50/50)",
+   "ok": true,
+   "detalle": "7.88"
+  },
+  {
+   "prueba": "Respaldo JSON v1.3 conserva lo archivado",
+   "ok": true,
+   "detalle": "1.3"
+  },
+  {
+   "prueba": "Persistencia: tras recargar no se vuelve a migrar",
+   "ok": true,
+   "detalle": "1"
+  },
+  {
+   "prueba": "Respaldo v1.3 se vuelve a cargar sin cambios",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "prueba": "Sin errores en consola",
+   "ok": true,
+   "detalle": "[]"
+  }
+ ]
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pruebas v1.2: mínimo y ponderación ALCPT por año (datos SINTÉTICOS, nombres inventados)."""
+"""Pruebas v1.2-v1.3: mínimo y ponderación ALCPT por año (datos SINTÉTICOS, nombres inventados)."""
 import json, os, time
 from pathlib import Path
 from playwright.sync_api import sync_playwright
@@ -127,7 +127,7 @@ with sync_playwright() as p:
     tab(pg, "cad"); pg.click('.nameb[data-id="s-3c"]'); pg.wait_for_timeout(400); t = pg.inner_text("#fichaBody")
     rec("Ficha: tabla de resultado ALCPT y calificación final", "resultado alcpt por año" in t.casefold() and "calificación final del ciclo" in t.casefold() and "8.65" in t, t[-300:]); pg.screenshot(path=str(SH / "ap_05_ficha.png")); pg.keyboard.press("Escape")
     # 12. respaldo conserva ajustes nuevos
-    tab(pg, "cfg"); jp = download(pg, lambda: pg.click("#xDl")); J = json.load(open(jp)); rec("Respaldo JSON v1.2 guarda la tabla única sin presets viejos", J["version"] == "1.2" and J["cfg"].get("apTabla", {}).get("4", {}).get("min") == 55 and "minSem" not in J["cfg"] and "minPreset" not in J["cfg"], J.get("version"))
+    tab(pg, "cfg"); jp = download(pg, lambda: pg.click("#xDl")); J = json.load(open(jp)); rec("Respaldo JSON v1.3 guarda la tabla única sin presets viejos", J["version"] == "1.3" and J["cfg"].get("apTabla", {}).get("4", {}).get("min") == 55 and "minSem" not in J["cfg"] and "minPreset" not in J["cfg"], J.get("version"))
     rec("Sin errores de consola", not ERR, ERR[:5]); ctx.close(); b.close()
 ok = sum(r["ok"] for r in R); print(f"\n{ok}/{len(R)} pruebas correctas")
 json.dump({"fecha": time.strftime("%Y-%m-%d %H:%M"), "correctas": ok, "total": len(R), "pruebas": R}, open(T / "resultado_test_aprob.json", "w"), ensure_ascii=False, indent=1)

@@ -1,10 +1,10 @@
-/* Seguimiento de inglés · réplica local v1.2. Código del artefacto original con parches de tools/build.py */
+/* Seguimiento de inglés · réplica local v1.3. Código del artefacto original con parches de tools/build.py */
 
 const $=s=>document.querySelector(s), VW=$("#view");
 const ANIO={"1":"1/er.","2":"2/o.","3":"3/er.","4":"4/o."};
 const YRS=()=>{const h=new Set([...S.items.values()].filter(o=>!o.eg).map(o=>o.a));const y=["1","2","3","4"].filter(a=>h.has(a));return y.length?y:YRS()};
 const MESES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
-const PARC=[["p1","1/er. parcial"],["p2","2/o. parcial"],["p3","3/er. parcial"]];
+const PARC=[["p1","1/er. parcial"],["p2","2/o. parcial"]];
 const CAUSAS=[["medica","Situación médica"],["tesis","Asesorías de tesis"],["servicio","Servicios"],["comision","Comisiones"],["otros","Otros"]];
 const CAUSA_TXT=Object.fromEntries(CAUSAS), CAUSA_INI={medica:"M",tesis:"T",servicio:"S",comision:"C",otros:"O"};
 const S={items:new Map(),cfg:{sesiones:[],minimo:6,riesgo:2},db:null,canWrite:true,view:"pan",

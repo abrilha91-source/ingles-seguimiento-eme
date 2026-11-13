@@ -1,5 +1,5 @@
 {
- "fecha": "2026-11-13 08:24",
+ "fecha": "2026-11-13 08:47",
  "correctas": 62,
  "total": 62,
  "pruebas": [
@@ -66,12 +66,12 @@
   {
    "prueba": "ALCPT: examen nuevo y puntaje guardado",
    "ok": true,
-   "detalle": "ALCPT Nov 2026"
+   "detalle": "ALCPT Nov 2026 · Final"
   },
   {
    "prueba": "ALCPT: color de escala (0–29 remedial)",
    "ok": true,
-   "detalle": "Agata Villegas Mara\n4/o. año · Grupo 1\n\t\tRemedial obligatorio\tNo aprobado\nmín. 55 · 4/o. año\n\t\t\t\nDiagnóstico\nPeriodo\nFinal\nSeguimiento"
+   "detalle": "Agata Villegas Mara\n4/o. año · Grupo 1\n\t\tRemedial obligatorio\tNo aprobado\nmín. 55 · 4/o. año\n\t\t\t\nDiagnóstico\nSeguimiento\nFinal\nCiclo anterior"
   },
   {
    "prueba": "ALCPT: la forma se habilita solo después del puntaje",
@@ -136,7 +136,7 @@
   {
    "prueba": "Kárdex .xlsx: Noto Sans 10 y celdas combinadas",
    "ok": true,
-   "detalle": "(47, 0, 17)"
+   "detalle": "(58, 0, 26)"
   },
   {
    "prueba": "Kárdex no muestra la forma del examen",
@@ -161,7 +161,7 @@
   {
    "prueba": "Estadística .xlsx: Noto Sans 10, combinadas",
    "ok": true,
-   "detalle": "(142, 0, 23, ['Resumen', 'Detalle', 'Aprobación ALCPT'])"
+   "detalle": "(178, 0, 26, ['Resumen', 'Detalle', 'Aprobación ALCPT', 'Avance seguimiento'])"
   },
   {
    "prueba": "Estadística: «inasistencias del remedial por causa»",
@@ -216,7 +216,7 @@
   {
    "prueba": "Importar pdf_escaneado: filas asociadas a cadetes",
    "ok": true,
-   "detalle": "6/6 · 2s"
+   "detalle": "6/6 · 1s"
   },
   {
    "prueba": "Importar png: filas asociadas a cadetes",
@@ -261,7 +261,7 @@
   {
    "prueba": "Concentrado .xlsx: Noto Sans 10, combinadas",
    "ok": true,
-   "detalle": "(241, 0, 32)"
+   "detalle": "(342, 0, 37)"
   },
   {
    "prueba": "Ajustes: escala guardada",

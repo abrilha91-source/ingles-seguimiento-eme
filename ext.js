@@ -3,7 +3,7 @@
    lectura local de archivos para Importar, respaldos y ajustes extra. */
 (function (G) {
 "use strict";
-const VER = "1.2";
+const VER = "1.3";
 const AP = () => G.ReplicaIng.ap;
 const MES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
 const MESL = {ene:0,feb:1,mar:2,abr:3,may:4,jun:5,jul:6,ago:7,sep:8,oct:9,nov:10,dic:11,jan:0,apr:3,aug:7,dec:11};
@@ -13,8 +13,8 @@ const DEF = {
   escalaAlc: [{min:0,max:59,c:"#C6334A",t:"Remedial obligatorio"},{min:60,max:69,c:"#D98200",t:"Riesgo"},{min:70,max:84,c:"#2762C8",t:"Suficiente"},{min:85,max:100,c:"#11794B",t:"Sobresaliente"}],
   planAlc: [{a:"1",sem:"2",libros:"4-5"},{a:"2",sem:"1",libros:"6-7"},{a:"2",sem:"2",libros:"8-9"},{a:"3",sem:"1",libros:"10-11"},{a:"3",sem:"2",libros:"12-13"},{a:"4",sem:"1",libros:"14-15"},{a:"4",sem:"2",libros:"16-17"}]
 };
-const TIPO_ALCPT = [["diagnostico","Diagnóstico"],["periodo","Periodo"],["final","Final"],["seguimiento","Seguimiento"]];
-const TIPO_ALC = [["p1","Examen parcial 1"],["p2","Examen parcial 2"],["p3","Examen parcial 3"],["final","Examen final del libro"]];
+const TIPO_ALCPT = [["diagnostico","Diagnóstico"],["seguimiento","Seguimiento"],["final","Final"],["historico","Ciclo anterior"]];
+const TIPO_ALC = [["p1","Examen parcial 1"],["p2","Examen parcial 2"],["final","Examen final del libro"]];
 const REM_EST = [["curso","En curso"],["aprobado","Aprobado"],["noaprobado","No aprobado"]];
 const REM_TXT_ALL = {curso:"En curso",aprobado:"Aprobado",noaprobado:"No aprobado",baja:"Baja por otro motivo"};
 const cfg = k => (S.cfg && S.cfg[k] != null ? S.cfg[k] : DEF[k]);
@@ -48,7 +48,7 @@ function alcAvg(o, filt) { const v = (o.alc || []).filter(x => !filt || filt(x))
 G.ReplicaIng.librosDe = librosDe; G.ReplicaIng.alcAvg = alcAvg;
 
 /* ---------- vista ALC y ALCPT ---------- */
-const AX = { tab: "alcpt", a: "", g: "", lab: "", nlab: "", ntipo: "periodo", nfecha: "", libro: "", tipo: "p1", fecha: "", sem: "" };
+const AX = { tab: "alcpt", a: "", g: "", lab: "", nlab: "", ntipo: "seguimiento", nfecha: "", libro: "", tipo: "p1", fecha: "", sem: "" };
 function subnav(id, items, cur) { return `<div class="seg2 subnav" role="group" aria-label="Apartados" id="${id}">${items.map(([k, t]) => `<button type="button" data-sub="${k}" aria-pressed="${cur === k}">${t}</button>`).join("")}</div>`; }
 function rosterSel() { const ys = YRS(); if (!AX.a || !ys.includes(AX.a)) AX.a = ys[ys.length - 1] || "4"; const gs = groups(AX.a); if (AX.g && !gs.includes(AX.g)) AX.g = "";
   return `<select id="axA" aria-label="Año">${ys.map(a => `<option value="${a}" ${AX.a === a ? "selected" : ""}>${ANIO[a]} año</option>`).join("")}</select>
@@ -62,16 +62,17 @@ function distHTML(vals, which) { const E = cfg(which === "alc" ? "escalaAlc" : "
 
 function vAlc() {
   VW.innerHTML = `<h2>Calificaciones ALC y ALCPT</h2>
-  <p class="lead">Captura los puntajes de ALCPT (diagnóstico, periodos, finales y seguimiento) y de los exámenes ALC de cada libro. El color sigue la escala de Ajustes. La forma del examen solo se anota después de aplicarlo.</p>
-  ${subnav("axSub", [["alcpt", "ALCPT"], ["alc", "ALC por libro"], ["res", "Promedios"], ["plan", "Plan de libros"]], AX.tab)}
+  <p class="lead">Captura los puntajes de ALCPT y de los exámenes ALC de cada libro. ALCPT: <b>Diagnóstico</b> (orden de rectoría, define el ingreso al remedial), <b>Seguimiento</b> (orden de la Directora, los que se apliquen, no cuentan para la calificación) y <b>Final</b> (cuenta el ${esc(String(AP().C("pesoAlcpt")))} %). El color sigue la escala de Ajustes. La forma del examen solo se anota después de aplicarlo.</p>
+  ${subnav("axSub", [["alcpt", "ALCPT"], ["prog", "Avance del seguimiento"], ["alc", "ALC por libro"], ["res", "Promedios"], ["plan", "Plan de libros"]], AX.tab)}
   <div id="axBody"></div>`;
   VW.querySelectorAll("#axSub [data-sub]").forEach(b => b.onclick = () => { AX.tab = b.dataset.sub; vAlc(); });
-  ({ alcpt: axAlcpt, alc: axAlc, res: axRes, plan: axPlan })[AX.tab]();
+  ({ alcpt: axAlcpt, prog: axProg, alc: axAlc, res: axRes, plan: axPlan }[AX.tab] || axAlcpt)();
 }
 function bindRoster(fn) { const a = $("#axA"), g = $("#axG"); if (a) a.onchange = e => { AX.a = e.target.value; AX.g = ""; fn(); }; if (g) g.onchange = e => { AX.g = e.target.value; fn(); }; }
 
 function axAlcpt() {
-  const B = $("#axBody"), labs = allLabels(); const opts = [["__diag", "Diagnóstico 21 sep. 2026"], ...labs.map(l => [l, "ALCPT " + l])];
+  const B = $("#axBody"), labs = allLabels(); const tipoLab = l => { const t = all().map(o => (o.alcpt || []).some(x => x[0] === l) ? AP().tipoOf(o, l) : null).filter(Boolean); const u = [...new Set(t)]; return u.length === 1 ? AP().TIPO_TXT[u[0]] : u.map(k => AP().TIPO_TXT[k]).join(" / "); };
+  const opts = [["__diag", "Diagnóstico 21 sep. 2026"], ...labs.map(l => [l, "ALCPT " + l + " · " + tipoLab(l)])];
   if (!AX.lab || (AX.lab !== "__new" && !opts.some(o => o[0] === AX.lab))) AX.lab = labs[labs.length - 1] || "__diag";
   const L = roster(), isNew = AX.lab === "__new", isD = AX.lab === "__diag";
   const get = o => isD ? { v: o.diag, m: o.diagMeta || {} } : (() => { const h = (o.alcpt || []).find(x => x[0] === AX.lab); return { v: h ? h[1] : null, m: ((o.alcptMeta || {})[AX.lab]) || {} }; })();
@@ -94,7 +95,7 @@ function axAlcpt() {
     <td>${AP().chip(AP().res(o, v, rlab))}</td>
     <td><input type="date" data-f="fecha" value="${esc(x.m.fecha || "")}" aria-label="Fecha de ${esc(o.n)}"></td>
     <td><input data-f="forma" value="${esc(x.m.forma || "")}" ${v == null ? "disabled placeholder=\"Se anota al aplicar\"" : "placeholder=\"Forma aplicada\""} aria-label="Forma aplicada a ${esc(o.n)}" style="max-width:130px"></td>
-    <td>${isD ? "Diagnóstico" : `<select data-f="tipo" aria-label="Tipo">${TIPO_ALCPT.map(([k, t]) => `<option value="${k}" ${(x.m.tipo || "periodo") === k ? "selected" : ""}>${t}</option>`).join("")}</select>`}</td></tr>`; }).join("")}
+    <td>${isD ? "Diagnóstico" : `<select data-f="tipo" aria-label="Tipo">${TIPO_ALCPT.map(([k, t]) => `<option value="${k}" ${AP().tipoOf(o, AX.lab) === k ? "selected" : ""}>${t}</option>`).join("")}</select>`}</td></tr>`; }).join("")}
   </tbody></table></div>`}`;
   bindRoster(axAlcpt);
   $("#axL").onchange = e => { AX.lab = e.target.value; axAlcpt(); };
@@ -106,7 +107,7 @@ function axAlcpt() {
   B.querySelectorAll("tr[data-row] [data-f]").forEach(inp => inp.onchange = () => {
     const tr = inp.closest("tr"), o = clone(S.items.get(tr.dataset.row)); const val = f => { const el = tr.querySelector(`[data-f="${f}"]`); return el ? el.value : ""; };
     let v = val("v"); v = v === "" ? null : Math.max(0, Math.min(100, Math.round(Number(v)))); if (v != null && isNaN(v)) return;
-    const meta = { fecha: val("fecha"), forma: v == null ? "" : val("forma").trim(), tipo: isD ? "diagnostico" : (val("tipo") || "periodo") };
+    const meta = { fecha: val("fecha"), forma: v == null ? "" : val("forma").trim(), tipo: isD ? "diagnostico" : (val("tipo") || AP().tipoOf(o, AX.lab)) };
     if (isD) { o.diag = v; o.diagMeta = meta; }
     else { const a = (o.alcpt || []).filter(x => x[0] !== AX.lab); if (v != null) a.push([AX.lab, v]); a.sort((p, q) => labKey(p[0]) - labKey(q[0])); o.alcpt = a;
       o.alcptMeta = { ...(o.alcptMeta || {}) }; if (v != null) o.alcptMeta[AX.lab] = meta; else delete o.alcptMeta[AX.lab]; }
@@ -114,6 +115,21 @@ function axAlcpt() {
   });
   B.querySelectorAll(".nameb").forEach(b => b.onclick = () => openFicha(b.dataset.id));
 }
+/* avance del seguimiento: diagnóstico -> seguimientos -> final por cadete */
+function axProg() { const B = $("#axBody"), L = roster().filter(o => !o.ex), A = AP(), c = A.progCnt(L), sg = v => v == null ? "—" : (v > 0 ? "+" : "") + v;
+  const maxSeg = Math.max(0, ...L.map(o => A.progreso(o).seg.length));
+  B.innerHTML = `<div class="bar">${rosterSel()}</div>
+  <section class="gmon"><div class="gm-k"><em>Prom. diagnóstico</em><b>${c.dAvg ?? "—"}</b></div><div class="gm-k"><em>Prom. último seguimiento</em><b>${c.sAvg ?? "—"}<small> (${sg(c.avAvg)} pts)</small></b></div>
+    <div class="gm-k"><em>Con seguimiento</em><b>${c.conSeg}<small>/${L.length}</small></b></div><div class="gm-k"><em>Mejoraron</em><b>${c.mej}<small>/${c.both}</small></b></div>
+    <div class="gm-k"><em>Ya alcanzan el mínimo</em><b>${c.ap}<small>${c.pct != null ? " (" + c.pct + "%)" : ""} · mín. ${esc(A.minTxt(AX.a))}</small></b></div></section>
+  <p class="hint">Diagnóstico y seguimientos no cuentan para la calificación. Salida del remedial: alcanzar el mínimo del año en un seguimiento (o ALCPT de parcial) posterior al alta.</p>
+  <div class="tscroll"><table class="tbl progall"><thead><tr><th>Cadete</th><th class="num">Diagnóstico</th>${Array.from({ length: maxSeg }, (_, i) => `<th class="num">Seg. ${i + 1}</th>`).join("")}<th class="num">Final</th><th class="num">Dif. último vs diag.</th><th>Resultado último</th><th>Tendencia</th></tr></thead><tbody>
+  ${L.map(o => { const P = A.progreso(o), u = P.fin[P.fin.length - 1] || P.ult, cell = p => p ? `${p.v}<span class="sub">${esc(A.fmtF(p.f) || p.lab)}</span>` : "—";
+    return `<tr><td><button class="nameb" data-id="${o.id}">${esc(o.n)}</button><span class="sub">${grpLabel(o)}${inRem(o) ? " · remedial" : ""}</span></td><td class="num">${cell(P.d)}</td>
+    ${Array.from({ length: maxSeg }, (_, i) => `<td class="num">${cell(P.seg[i])}</td>`).join("")}<td class="num">${cell(P.fin[P.fin.length - 1])}</td>
+    <td class="num ${u && u.dif != null && u.dif < 0 ? "lo" : ""}">${u ? sg(u.dif) : "—"}</td><td>${u ? A.chip(u.r) : "—"}</td><td>${A.progSvg(P, String(o.a), 120, 34)}</td></tr>`; }).join("")}</tbody></table></div>
+  ${maxSeg ? "" : `<p class="hint">Aún no hay ALCPT de seguimiento en este recorte. Regístralos en la pestaña ALCPT con “+ Registrar examen nuevo…” y tipo Seguimiento.</p>`}`;
+  bindRoster(axProg); B.querySelectorAll(".nameb").forEach(b => b.onclick = () => openFicha(b.dataset.id)); }
 /* examen nuevo todavía sin puntajes: se muestra la captura con la etiqueta pendiente */
 function axAlcptPend() { const p = AX.pend; if (!p) return axAlcpt();
   const L = roster(); AX.lab = p.l;
@@ -357,10 +373,11 @@ function openEme(id) {
   $("#emeBody").innerHTML = `<div class="fhead"><span class="av s-${o.eg ? "ex" : estAc(o)}">${esc(ini(o.n))}</span><div><h2>${esc(o.n)}</h2><p class="hint">${o.m ? esc(o.m) + " · " : ""}Generación ${esc(o.gen || "—")} · ${sitLabel(o)}${o.estatus && !o.eg && o.estatus !== "Activo" ? " · " + esc(o.estatus) : ""}</p></div>
     <button class="fx" type="button" id="emX" aria-label="Cerrar">×</button></div>
   ${chartEme(o)}
+  <h3>Avance ALCPT del ciclo: diagnóstico → seguimientos → final</h3>${AP().progresoHTML(o)}
   <h3>Trayectoria por ciclo</h3>
   <div class="tscroll"><table class="tbl" style="min-width:860px"><thead><tr><th>Ciclo</th><th>Semestre</th><th>Año</th><th>Grupo</th><th>Docente</th><th>ALCPT</th><th>ALC</th><th class="num">Parciales</th><th>Remedial</th></tr></thead><tbody>
   ${K.map(({ t, al, alc, rem, parc }) => `<tr><td>${esc(t.ciclo)}</td><td>${esc(t.sem || "")}</td><td>${ANIO[t.a] ? ANIO[t.a] + " año" : esc(t.a || "")}</td><td>${esc(t.g || "—")}</td><td>${esc(t.d || "—")}</td>
-    <td>${al.map(x => `<span class="nw">${esc(x.l)}: ${chipEsc(nv(x.v), "alcpt")} ${AP().badge(AP().res(o, x.v, x.l))}</span>`).join("<br>") || "—"}${t.ciclo === "2026-2027" && nv(o.diag) != null ? `<br><span class="nw">Diag.: ${chipEsc(nv(o.diag), "alcpt")} ${AP().badge(AP().diagRes(o))}</span>` : ""}</td>
+    <td>${al.map(x => `<span class="nw">${esc(x.l)} <small>${esc(AP().TIPO_TXT[AP().tipoOf(o, x.l)])}</small>: ${chipEsc(nv(x.v), "alcpt")} ${AP().badge(AP().res(o, x.v, x.l))}</span>`).join("<br>") || "—"}${t.ciclo === "2026-2027" && nv(o.diag) != null ? `<br><span class="nw">Diag.: ${chipEsc(nv(o.diag), "alcpt")} ${AP().badge(AP().diagRes(o))}</span>` : ""}</td>
     <td>${alc.map(x => `<span class="nw">L${esc(x.libro)} ${esc((TIPO_ALC.find(k => k[0] === x.tipo) || [, x.tipo])[1].replace("Examen ", ""))}: ${chipEsc(nv(x.pts), "alc")}</span>`).join("<br>") || "—"}</td>
     <td class="num">${parc.length ? (parc.reduce((a, b) => a + b, 0) / parc.length).toFixed(2) : "—"}</td><td>${rem.map(h => `${esc(h.alta)} · ${esc(REM_TXT[h.estatus] || (h.baja ? "cerrado" : "en curso"))}`).join("<br>") || "—"}</td></tr>`).join("")}
   </tbody></table></div>
@@ -379,10 +396,15 @@ function kardexAoa(o) {
   const K = kardexRows(o), rows = [["KÁRDEX DE INGLÉS · " + o.n], ["Esc. Mil. Enfría. · Mesa de Idioma Extranjero"], ["Matrícula", o.m || "", "Generación", o.gen || "", "Situación", o.eg ? (o.estatus && o.estatus !== "Egresado" ? o.estatus : "Egresado") : `${ANIO[o.a]} año · Grupo ${o.g}`], [],
     ["Ciclo", "Semestre", "Año", "Grupo", "Docente", "Examen", "Puntaje", "Escala", "Resultado", "Promedio de parciales", "Remedial"]];
   const merges = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 10 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: 10 } }]; const start = rows.length;
-  K.forEach(({ t, al, alc, rem, parc }) => { const ex = [...al.map(x => ["ALCPT " + x.l, nv(x.v), "alcpt", AP().res(o, x.v, x.l)]), ...(t.ciclo === "2026-2027" && nv(o.diag) != null ? [["Diagnóstico sep 2026", nv(o.diag), "alcpt", AP().diagRes(o)]] : []), ...alc.map(x => [`ALC libro ${x.libro} · ${(TIPO_ALC.find(k => k[0] === x.tipo) || [, x.tipo])[1]}`, nv(x.pts), "alc", null])];
+  K.forEach(({ t, al, alc, rem, parc }) => { const ex = [...al.map(x => ["ALCPT " + x.l + " · " + AP().TIPO_TXT[AP().tipoOf(o, x.l)], nv(x.v), "alcpt", AP().res(o, x.v, x.l)]), ...(t.ciclo === "2026-2027" && nv(o.diag) != null ? [["Diagnóstico sep 2026", nv(o.diag), "alcpt", AP().diagRes(o)]] : []), ...alc.map(x => [`ALC libro ${x.libro} · ${(TIPO_ALC.find(k => k[0] === x.tipo) || [, x.tipo])[1]}`, nv(x.pts), "alc", null])];
     const pr = parc.length ? Math.round(parc.reduce((a, b) => a + b, 0) / parc.length * 100) / 100 : ""; const rm = rem.map(h => `${h.alta} · ${REM_TXT[h.estatus] || (h.baja ? "cerrado" : "en curso")}`).join("; ");
     (ex.length ? ex : [["", "", "", null]]).forEach(e => { const b = banda(e[1], e[2]), r = e[3]; rows.push([t.ciclo, t.sem || "", ANIO[t.a] ? ANIO[t.a] + " año" : (t.a || ""), t.g || "", t.d || "", e[0], e[1] ?? "", b ? b.t : "", r && r.st !== "nd" ? AP().txt(r) + (r.min != null ? ` (mín. ${r.min})` : "") : "", pr, rm]); }); });
   const end = rows.length - 1; if (end >= start) merges.push(...XL.runs(rows, [0, 1, 2, 3, 4, 9, 10], start, end));
+  const P = AP().progreso(o); rows.push([], ["Avance ALCPT del ciclo " + cfg("ciclo") + ": diagnóstico → seguimientos → final"]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 10 } });
+  rows.push(["Examen", "", "Etiqueta", "", "Fecha", "", "Puntos", "Dif. vs diagnóstico", "Resultado", "", ""]); const hp = rows.length - 1; merges.push({ s: { r: hp, c: 0 }, e: { r: hp, c: 1 } }, { s: { r: hp, c: 2 }, e: { r: hp, c: 3 } }, { s: { r: hp, c: 4 }, e: { r: hp, c: 5 } }, { s: { r: hp, c: 8 }, e: { r: hp, c: 10 } });
+  (P.pasos.length ? P.pasos : [null]).forEach(p => { if (!p) { rows.push(["Sin ALCPT de diagnóstico, seguimiento ni final en el ciclo", "", "", "", "", "", "", "", "", "", ""]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 10 } }); return; }
+    rows.push([AP().pasoTxt(p), "", p.k === "diagnostico" ? "Diagnóstico sep 2026" : "ALCPT " + p.lab, "", AP().fmtF(p.f) || "", "", p.v, p.dif == null ? "" : p.dif, p.r && p.r.st !== "nd" ? AP().txt(p.r) + (p.r.min != null ? ` (mín. ${p.r.min})` : "") : "", "", ""]); const r = rows.length - 1;
+    merges.push({ s: { r, c: 0 }, e: { r, c: 1 } }, { s: { r, c: 2 }, e: { r, c: 3 } }, { s: { r, c: 4 }, e: { r, c: 5 } }, { s: { r, c: 8 }, e: { r, c: 10 } }); });
   rows.push([], ["Remediales"]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 10 } });
   rows.push(["Alta", "Baja", "Motivo", "", "", "Estatus", "Puntaje de ingreso", "", "Cierre", "", ""]); const hr = rows.length - 1;
   (o.remHist || []).forEach(h => { rows.push([h.alta || "", h.baja || "", h.motivo || "", "", "", REM_TXT[h.estatus] || "", h.puntaje ?? "", "", h.motivoBaja || "", "", ""]); const r = rows.length - 1; merges.push({ s: { r, c: 2 }, e: { r, c: 4 } }, { s: { r, c: 6 }, e: { r, c: 7 } }, { s: { r, c: 8 }, e: { r, c: 10 } }); });
@@ -391,7 +413,7 @@ function kardexAoa(o) {
   const obs = [...(o.obsHist || []).map(x => `${x.fecha}: ${x.txt}`), ...(o.obs ? [o.obs] : [])];
   rows.push([], ["Observaciones"]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 10 } });
   (obs.length ? obs : ["Sin observaciones"]).forEach(t => { rows.push([t]); merges.push({ s: { r: rows.length - 1, c: 0 }, e: { r: rows.length - 1, c: 10 } }); });
-  return { rows, merges, hdr: [4, hr] };
+  return { rows, merges, hdr: [4, hp, hr] };
 }
 async function kardexXlsx(L) { try { toast("Preparando kárdex…"); const X = await XL.lib(), wb = X.utils.book_new(); const used = new Set();
   L.forEach(o => { const k = kardexAoa(o); let nm = (o.n || "Cadete").replace(/[\\/?*\[\]:]/g, "").slice(0, 28); let i = 2; while (used.has(nm)) nm = nm.slice(0, 26) + " " + i++; used.add(nm);
@@ -428,7 +450,10 @@ const _actual = G.actual, _nuevo = G.nuevo;
 G.actual = function (o) { if (IMP.tipo === "alc") { const x = (o.alc || []).find(z => z.libro === IMP.libro && z.tipo === IMP.alcTipo && (z.ciclo || cfg("ciclo")) === cfg("ciclo")); return x ? String(x.pts) : "—"; } return _actual(o); };
 G.nuevo = function (r) { return IMP.tipo === "alc" ? (r.puntaje ?? "—") : _nuevo(r); };
 const _vImp = G.vImp;
-G.vImp = function () { _vImp(); if (IMP.tipo !== "alc") return; const lab = $("#iL"); if (!lab) return; const libs = librosDe(IMP.a); if (!IMP.libro || !libs.includes(IMP.libro)) IMP.libro = libs[0] || ""; IMP.alcTipo = IMP.alcTipo || "p1";
+G.vImp = function () { _vImp(); if (IMP.tipo === "alcpt") { const l = $("#iL"); if (l && !$("#iTp")) { IMP.alTipo = IMP.alTipo || "seguimiento";
+    l.closest("label").insertAdjacentHTML("afterend", `<label class="hint">Tipo de ALCPT<select id="iTp">${TIPO_ALCPT.filter(t => t[0] !== "diagnostico").map(([k, t]) => `<option value="${k}" ${IMP.alTipo === k ? "selected" : ""}>${t}</option>`).join("")}</select></label><label class="hint">Fecha de aplicación<input type="date" id="iTf" value="${esc(IMP.alFecha || "")}"></label>`);
+    $("#iTp").onchange = e => { IMP.alTipo = e.target.value; }; $("#iTf").onchange = e => { IMP.alFecha = e.target.value; }; } return; }
+  if (IMP.tipo !== "alc") return; const lab = $("#iL"); if (!lab) return; const libs = librosDe(IMP.a); if (!IMP.libro || !libs.includes(IMP.libro)) IMP.libro = libs[0] || ""; IMP.alcTipo = IMP.alcTipo || "p1";
   lab.closest("label").outerHTML = `<label class="hint">Libro<select id="iLb">${libs.map(b => `<option ${IMP.libro === b ? "selected" : ""}>${b}</option>`).join("")}</select></label><label class="hint">Examen<select id="iAt">${TIPO_ALC.map(([k, t]) => `<option value="${k}" ${IMP.alcTipo === k ? "selected" : ""}>${t}</option>`).join("")}</select></label><label class="hint">Fecha<input type="date" id="iAf" value="${esc(IMP.alcFecha || "")}"></label>`;
   $("#iLb").onchange = e => { IMP.libro = e.target.value; IMP.rows = null; G.vImp(); }; $("#iAt").onchange = e => { IMP.alcTipo = e.target.value; IMP.rows = null; G.vImp(); }; $("#iAf").onchange = e => { IMP.alcFecha = e.target.value; }; };
 G.leer = async function () {
@@ -452,7 +477,9 @@ G.leer = async function () {
   } catch (e) { console.error(e); IMP.msg = errMsg(e) || (e.code === "empty" ? "El archivo no tiene texto legible." + (notes.length ? " " + notes.join(" · ") : "") : "No se pudo leer el archivo. Prueba con una foto más nítida o con el archivo Excel."); }
   IMP.busy = false; G.vImp(); };
 const _aplicar = G.aplicar;
-G.aplicar = async function () { if (IMP.tipo !== "alc") return _aplicar();
+G.aplicar = async function () { if (IMP.tipo === "alcpt") { const lab = IMP.lab.trim(), tipo = IMP.alTipo || "seguimiento", fecha = IMP.alFecha || "", ids = (IMP.rows || []).filter(r => r.ok && r.oid && r.puntaje != null).map(r => r.oid);
+    await _aplicar(); ids.forEach(id => { const o = S.items.get(id); if (!o || !(o.alcpt || []).some(x => x[0] === lab)) return; const x = clone(o); x.alcptMeta = { ...(x.alcptMeta || {}), [lab]: { ...((x.alcptMeta || {})[lab] || {}), tipo, fecha: fecha || (((x.alcptMeta || {})[lab] || {}).fecha || "") } }; x.dataVer = 3; saveItem(x, true); }); render(); return; }
+  if (IMP.tipo !== "alc") return _aplicar();
   const R = IMP.rows.filter(r => r.ok && r.oid), seen = new Set(), ciclo = cfg("ciclo"); let n = 0;
   R.forEach(r => { if (seen.has(r.oid) || r.puntaje == null) return; seen.add(r.oid); const o = clone(S.items.get(r.oid)); const rest = (o.alc || []).filter(x => !(x.libro === IMP.libro && x.tipo === IMP.alcTipo && (x.ciclo || ciclo) === ciclo));
     rest.push({ id: "a" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), ciclo, a: o.a, sem: cfg("semestre"), libro: IMP.libro, tipo: IMP.alcTipo, fecha: IMP.alcFecha || "", forma: "", pts: Math.max(0, Math.min(100, Math.round(Number(r.puntaje)))) }); o.alc = rest; saveItem(o, true); n++; });
@@ -488,15 +515,27 @@ async function importLista(file) { try { const X = await loadXLSX(); const wb = 
   if (!items.length) { toast("No se encontró una tabla con columnas Año, Grupo y Nombre"); return; }
   await S.db._bulk(items); await S.db._notify("alumnos"); toast(`${n} cadetes nuevos · ${upd} actualizados`); } catch (e) { console.error(e); toast("No se pudo leer la lista"); } }
 async function concentradoXlsx() { try { const X = await XL.lib(), wb = X.utils.book_new(), L = all().sort((x, y) => x.a.localeCompare(y.a) || String(x.g).localeCompare(String(y.g)) || x.n.localeCompare(y.n, "es")); const labs = allLabels();
-  const head = ["Año", "Grupo", "Docente", "Nombre", "Matrícula", "Exento", "Diagnóstico 2026", ...labs.map(l => "ALCPT " + l), "ALC promedio", ...PARC.map(p => p[1]), "Promedio", "Estado", "Remedial", "Estatus remedial", "Faltas sabatinas", "Mínimo ALCPT del año", "Resultado diagnóstico", "Último ALCPT", "Resultado último ALCPT", "Monitor", "Calificación final"];
+  const head = ["Año", "Grupo", "Docente", "Nombre", "Matrícula", "Exento", "Diagnóstico 2026", ...labs.map(l => "ALCPT " + l), "ALC promedio", ...PARC.map(p => p[1]), "Promedio", "Estado", "Remedial", "Estatus remedial", "Faltas sabatinas", "Mínimo ALCPT del año", "Resultado diagnóstico", "Último ALCPT", "Resultado último ALCPT", "Monitor", "Calificación final", "Seguimientos", "Último seguimiento", "Dif. vs diagnóstico", "Resultado último seguimiento"];
   const rows = [["CONCENTRADO DE INGLÉS · " + cfg("ciclo")], ["Esc. Mil. Enfría. · Mesa de Idioma Extranjero · " + hoy()], head];
   L.forEach(o => rows.push([ANIO[o.a] + " año", "Grupo " + o.g, o.d || "", o.n, o.m || "", o.ex ? "Sí" : "", o.diag ?? "", ...labs.map(l => { const h = (o.alcpt || []).find(x => x[0] === l); return h ? h[1] : ""; }), alcAvg(o) == null ? "" : Math.round(alcAvg(o) * 10) / 10, ...parts(o).map(v => v == null ? "" : v), prom(o) == null ? "" : prom(o), o.ex ? "Exento" : EST_TXT[estAc(o)], inRem(o) ? "Sí" : "", o.rem ? REM_TXT[remEst(o)] || "" : "", inRem(o) ? faltas(o) : "", ...concAp(o)]));
   const W = head.length; const merges = [{ s: { r: 0, c: 0 }, e: { r: 0, c: W - 1 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: W - 1 } }, ...XL.runs(rows, [0, 1, 2], 3, rows.length - 1)];
-  X.utils.book_append_sheet(wb, XL.sheet(X, rows, [9, 10, 28, 36, 14, 7, 10, ...labs.map(() => 10), 9, 10, 10, 10, 9, 14, 9, 14, 9, 12, 18, 12, 22, 9, 12], merges, [2]), "Concentrado");
-  apSheet(X, wb, L);
+  X.utils.book_append_sheet(wb, XL.sheet(X, rows, [9, 10, 28, 36, 14, 7, 10, ...labs.map(() => 10), 9, 10, 10, 9, 14, 9, 14, 9, 12, 18, 12, 22, 9, 12, 11, 18, 11, 18], merges, [2]), "Concentrado");
+  apSheet(X, wb, L); segSheet(X, wb, L);
   await XL.save(X, wb, `CONCENTRADO INGLES ${hoy()}.xlsx`); toast("Concentrado descargado"); } catch (e) { console.error(e); toast("No se pudo preparar el concentrado"); } }
 function concAp(o) { const A = AP(), m = A.minFor(String(o.a)), d = A.diagRes(o), l = A.lastRes(o), f = A.calFinal(o);
-  return [m.min == null ? "Sin mínimo" : m.min, d.st === "nd" ? "" : A.txt(d), l.st === "nd" ? "" : `${l.v} (${l.lab})`, l.st === "nd" ? "" : A.txt(l) + (l.min != null && l.a !== String(o.a) ? ` · mín. ${l.min} de ${ANIO[l.a]} año` : ""), A.monitor(o) ? "Sí" : "", f.st === "extra" ? "Extraordinario" : f.v != null ? f.v : ""]; }
+  const P = A.progreso(o), u = P.ult;
+  return [m.min == null ? "Sin mínimo" : m.min, d.st === "nd" ? "" : A.txt(d), l.st === "nd" ? "" : `${l.v} (${l.lab})`, l.st === "nd" ? "" : A.txt(l) + (l.min != null && l.a !== String(o.a) ? ` · mín. ${l.min} de ${ANIO[l.a]} año` : ""), A.monitor(o) ? "Sí" : "", f.st === "extra" ? "Extraordinario" : f.v != null ? f.v : "",
+    P.seg.length || "", u ? `${u.v} (${u.lab})` : "", u && u.dif != null ? u.dif : "", u ? A.txt(u.r) : ""]; }
+/* hoja de avance del seguimiento por año y grupo */
+function segSheet(X, wb, L) { const A = AP(), rows = [["AVANCE DEL SEGUIMIENTO ALCPT POR AÑO Y GRUPO · " + cfg("ciclo")], ["Diagnóstico (orden de rectoría) contra el último ALCPT de seguimiento (orden de la Directora). No cuentan para la calificación."],
+    ["Año", "Grupo", "Cadetes", "Con seguimiento", "Con diagnóstico y seguimiento", "Prom. diagnóstico", "Prom. último seguimiento", "Avance promedio (pts)", "Mejoraron", "Aprueban ahora", "No aprueban", "% aprueba ahora"]];
+  const merges = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 11 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: 11 } }]; const st = rows.length, row = (a, g, Y) => { const c = A.progCnt(Y); return [ANIO[a] + " año", g, Y.length, c.conSeg, c.both, c.dAvg ?? "", c.sAvg ?? "", c.avAvg ?? "", c.mej, c.ap, c.na, c.pct ?? ""]; };
+  ["1", "2", "3", "4"].forEach(a => { const Y = L.filter(o => o.a === a && !o.ex); if (!Y.length) return;
+    [...new Set(Y.map(o => String(o.g)))].sort((x, y) => x.localeCompare(y, "es", { numeric: true })).forEach(g => rows.push(row(a, "Grupo " + g, Y.filter(o => String(o.g) === g))));
+    rows.push(row(a, "Total del año", Y)); });
+  merges.push(...XL.runs(rows, [0], st, rows.length - 1));
+  X.utils.book_append_sheet(wb, XL.sheet(X, rows, [10, 14, 9, 12, 14, 12, 14, 12, 11, 11, 11, 12], merges, [2]), "Avance seguimiento"); }
+G.ReplicaIng.segSheet = segSheet;
 /* hoja de aprobación ALCPT por año y grupo (diagnóstico y último examen) */
 function apSheet(X, wb, L) { const A = AP(), rows = [["APROBACIÓN ALCPT POR AÑO Y GRUPO · " + cfg("ciclo")], ["Mínimo y ponderación de cada año según Ajustes."],
     ["Año", "Grupo", "Cadetes", "Mínimo", "Diagnóstico 21 sep. 2026", "", "", "", "Último ALCPT registrado", "", "", ""], ["", "", "", "", "Aprobados", "No aprobados", "Sin mínimo", "% aprobación", "Aprobados", "No aprobados", "Sin mínimo", "% aprobación"]];

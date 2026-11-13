@@ -1,5 +1,5 @@
 {
- "fecha": "2026-11-13 08:23",
+ "fecha": "2026-11-13 08:47",
  "correctas": 35,
  "total": 35,
  "pruebas": [
@@ -86,7 +86,7 @@
   {
    "prueba": "ALC y ALCPT: resultado del diagnóstico de 4/o. (1 aprob., 2 no aprob.)",
    "ok": true,
-   "detalle": "1/er. año\n2/o. año\n3/er. año\n4/o. año\nTodos los grupos\nGrupo 1\nGrupo 2\nDiagnóstico 21 sep. 2026\nALCPT Feb 2025\nALCPT Jul 2026\nALCPT Nov 2026\nALCPT Ene 2027\n+ Registrar examen nuevo…\nPROMEDIO\n47.3\nCAPTURADOS\n3/3\nMÍNIMO · MÁXIMO\n40 · 58\nAPROBADOS · NO APROBADOS\n1 · 2 (33.3% aprob.)\n2\n1\n\n0–29: Remedial"
+   "detalle": "1/er. año\n2/o. año\n3/er. año\n4/o. año\nTodos los grupos\nGrupo 1\nGrupo 2\nDiagnóstico 21 sep. 2026\nALCPT Feb 2025 · Ciclo anterior\nALCPT Jul 2026 · Ciclo anterior\nALCPT Nov 2026 · Seguimiento\nALCPT Ene 2027 · Final\n+ Registrar examen nuevo…\nPROMEDIO\n47.3\nCAPTURADOS\n3/3\nMÍNIMO · MÁXIMO\n40 · 58\nAPROBADOS"
   },
   {
    "prueba": "Promedios: columnas de aprobados / no aprobados",
@@ -116,7 +116,7 @@
   {
    "prueba": "Excel de estadística: hoja Aprobación ALCPT, Noto Sans 10, celdas combinadas",
    "ok": true,
-   "detalle": "(['Resumen', 'Detalle', 'Aprobación ALCPT'], 277, 0)"
+   "detalle": "(['Resumen', 'Detalle', 'Aprobación ALCPT', 'Avance seguimiento'], 373, 0)"
   },
   {
    "prueba": "Excel: total 4/o. diag 1/2/0 y 33.3 %; último 2/1",
@@ -131,7 +131,7 @@
   {
    "prueba": "Kárdex en pantalla: resultado por examen",
    "ok": true,
-   "detalle": "PC\nPRUEBA CUATRO ALFA\n\nGeneración — · 4/o. año · Grupo 1\n\n×\nPROGRESO\nPUNTAJES DURANTE SU ESTANCIA\nALCPT\nALC y diagnóstico\n0\n50\n100\n20\nALCPT Feb 2025\n35\nALCPT Jul 2026\n44\nDiagnóstico sep 2026\nTRAYECTORIA POR CICLO\nCICLO\tSEMESTRE\tAÑO\tGRUPO\tDOCENTE\tALCPT\tALC\tPARCIALES\tREMEDIAL\n2026-2027\t1/er. semestre\t"
+   "detalle": "PC\nPRUEBA CUATRO ALFA\n\nGeneración — · 4/o. año · Grupo 1\n\n×\nPROGRESO\nPUNTAJES DURANTE SU ESTANCIA\nALCPT\nALC y diagnóstico\n0\n50\n100\n20\nALCPT Feb 2025\n35\nALCPT Jul 2026\n44\nDiagnóstico sep 2026\nAVANCE ALCPT DEL CICLO: DIAGNÓSTICO → SEGUIMIENTOS → FINAL\nEXAMEN\tFECHA\tPUNTOS\tDIF. VS DIAGNÓSTICO\tRESULTADO\n"
   },
   {
    "prueba": "Kárdex .xlsx: columna Resultado con mínimo del año y Noto Sans 10",
@@ -141,7 +141,7 @@
   {
    "prueba": "Concentrado: resultados, monitor y calificación final",
    "ok": true,
-   "detalle": "['Estatus remedial', 'Faltas sabatinas', 'Mínimo ALCPT del año', 'Resultado diagnóstico', 'Último ALCPT', 'Resultado último ALCPT', 'Monitor', 'Calificación final']"
+   "detalle": "['Último ALCPT', 'Resultado último ALCPT', 'Monitor', 'Calificación final', 'Seguimientos', 'Último seguimiento', 'Dif. vs diagnóstico', 'Resultado último seguimiento']"
   },
   {
    "prueba": "Ajustes: subir el mínimo de 4/o. a 60 cambia el resultado",
@@ -169,9 +169,9 @@
    "detalle": "\nEVIDENCIAS Y BITÁCORAS\n\nSin evidencias adjuntas.\n\nNota (opcional)\nAdjuntar archivos\n\nJPG, PNG, PDF, MP3 y WAV hasta 20 MB; Word, Excel y PowerPoint hasta 8 MB. Se guarda el archivo original en este dispositivo.\n\nOBSERVACIONES\nTemas a reforzar, conducta, acuerdos y seguimiento\nCerrar\nGuardar cambios"
   },
   {
-   "prueba": "Respaldo JSON v1.2 guarda la tabla única sin presets viejos",
+   "prueba": "Respaldo JSON v1.3 guarda la tabla única sin presets viejos",
    "ok": true,
-   "detalle": "1.2"
+   "detalle": "1.3"
   },
   {
    "prueba": "Sin errores de consola",

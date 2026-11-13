@@ -1,4 +1,4 @@
-const C = "ingles-seguimiento-eme-v1.2";
+const C = "ingles-seguimiento-eme-v1.3";
 const A = ["./", "./index.html", "./styles.css", "./shim.js", "./app.js", "./ocr.js", "./transcribe.js", "./readers.js", "./ext.js", "./aprob.js", "./estadisticas.js", "./boot.js",
   "./manifest.json", "./icon.svg", "./icon-192.png", "./icon-512.png", "./vendor/fonts.css", "./vendor/jszip.min.js", "./vendor/pdf.min.js", "./vendor/pdf.worker.min.js", "./vendor/xlsx.bundle.js"];
 self.addEventListener("install", e => {
